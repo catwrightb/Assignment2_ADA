@@ -23,8 +23,14 @@ public class CustomDrawingStartCode extends JPanel{
         topPanel.add(submitButton);
         setBackground(Color.GREEN);
 
+        JPanel bottomPanel = new JPanel();
+        JButton clearButton = new JButton("Clear");
+        bottomPanel.add(clearButton, BorderLayout.CENTER);
+        setBackground(Color.PINK);
+
         add(topPanel, BorderLayout.NORTH);
-        add(new Shape(PANEL_WIDTH, PANEL_HEIGHT), BorderLayout.SOUTH);
+        add(new Shape(PANEL_WIDTH, PANEL_HEIGHT), BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
 //    //seperate inner class for graphics
