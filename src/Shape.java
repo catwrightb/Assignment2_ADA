@@ -10,17 +10,13 @@ public class Shape extends Component {
     int width;
     int height;
      int n;
-    //static double interiorAngleSum;
-   // static ArrayList<CoordinateWithDistance> distanceBetweenPoints;
-    ArrayList<Coordinate> coordinates;
-    ArrayList<Coordinate> points;
+
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT, int sides) {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         width = PANEL_WIDTH;
         height = PANEL_HEIGHT;
         n = sides;
-
     }
 
     public void paint(Graphics g) {
@@ -40,9 +36,10 @@ public class Shape extends Component {
        // point at center of circle
         g.fillOval(x, y, 2,2);
 
-        coordinates = new ArrayList<Coordinate>();
-        points = new ArrayList<Coordinate>();
-        //distanceBetweenPoints = new ArrayList<CoordinateWithDistance>();
+        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        ArrayList<Coordinate> points = new ArrayList<Coordinate>();
+        ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
+
 
         int m = Math.min(x, y);
         int c = 4 * m / 5;
@@ -56,18 +53,14 @@ public class Shape extends Component {
             double t = random.nextDouble() * Math.PI*2;
             int a = (int) Math.round(x + radius *Math.cos(t));
             int b = (int) Math.round(y + radius *Math.sin(t));
-            g.setColor(Color.BLACK);
-            g.fillOval(a-r2, b-r2, 2*r2, 2*r2);
+//            g.setColor(Color.BLACK);
+//            g.fillOval(a-r2, b-r2, 2*r2, 2*r2);
             coordinates.add(new Coordinate(a,b));
             points.add(new Coordinate(a,b));
         }
 
         sortVerticies(coordinates);
         sortVerticies(points);
-      //  System.out.println(coordinates);
-
-
-        //changeCoordinateMethod(points);
 
         Polygon polygon = new Polygon();
 
@@ -80,14 +73,16 @@ public class Shape extends Component {
         g2d.drawPolygon(polygon);
 
         BruteForce bf = new BruteForce(points);
+        distanceBetweenPoints = bf.startBruteForce();
+        System.out.println(distanceBetweenPoints);
 
 
-//        Collections.sort(distanceBetweenPoints);
-//        for (int i = 0; i < n-3; i++) {
-//            CoordinateWithDistance line = distanceBetweenPoints.get(i);
-//            g.setColor(Color.BLUE);
-//            g.drawLine(line.x, line.y, line.x2, line.y2);
-//        }
+
+        for (int i = 0; i < n-3; i++) {
+            CoordinateWithDistance line = distanceBetweenPoints.get(i);
+            g.setColor(Color.BLUE);
+            g.drawLine(line.x, line.y, line.x2, line.y2);
+        }
 
     }
 

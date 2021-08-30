@@ -1,27 +1,29 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class BruteForce {
     protected static ArrayList<Coordinate> points;
-    static ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
+    static ArrayList<CoordinateWithDistance> distanceBetweenPoints;
     protected static int n;
     protected static int i;
     static int end_n;
     static double sum;
 
     public BruteForce(ArrayList<Coordinate> points) {
+        distanceBetweenPoints = new ArrayList<>();
         this.points = points;
         this.n = points.size();
         this.i = 0;
         this.end_n = n-2;
         sum = 0;
-        startBruteForce();
-
     }
 
-    public static void startBruteForce(){
+    public ArrayList<CoordinateWithDistance> startBruteForce(){
         System.out.println("-------------");
         changeCoordinateMethod(i);
         System.out.println(sum);
+        Collections.sort(distanceBetweenPoints);
+        return distanceBetweenPoints;
 
     }
 
