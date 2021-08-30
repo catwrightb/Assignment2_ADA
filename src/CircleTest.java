@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
+//test class to practice circle drawing and getting points on it
+//remove before turning in
+
 public class CircleTest extends JPanel {
 
     private static final int SIZE = 300;
