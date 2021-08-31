@@ -31,6 +31,21 @@ public class Coordinate{
     public void setY(int y) {
         this.y = y;
     }
+
+    @Override
+    public boolean equals (Object object) {
+        boolean result = false;
+        if (object == null || object.getClass() != getClass()) {
+            result = false;
+        } else {
+            Coordinate c = (Coordinate) object;
+            if (this.x == (c.getX()) && this.y == (c.getY())  )
+                     {
+                result = true;
+            }
+        }
+        return result;
+    }
 }
 
 

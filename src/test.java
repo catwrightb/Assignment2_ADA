@@ -17,10 +17,24 @@ public class test {
 
     public static void main(String[] args) {
 
-        int number = 4;
-        end = number-2;
-        factorial(number);
-        System.out.println(number + " factorial = " + result);
+        ArrayList<CoordinateWithDistance> test = new ArrayList<>();
+
+        test.add(new CoordinateWithDistance(3,3,4,6,345.0));
+        test.add(new CoordinateWithDistance(5,1,4,6,345.0));
+        test.add(new CoordinateWithDistance(3,2,4,6,345.0));
+        test.add(new CoordinateWithDistance(4,3,4,6,345.0));
+        Coordinate ct = new CoordinateWithDistance(3,2,4,6,345.0);
+
+        if (test.contains((ct))){
+            System.out.println("true");
+        }
+        else
+            System.out.println("false");
+
+//        int number = 4;
+//        end = number-2;
+//        factorial(number);
+//        System.out.println(number + " factorial = " + result);
 
 //////        double r = 40.0;
 //////        double angle1 = Math.random()* (2 * Math.PI);

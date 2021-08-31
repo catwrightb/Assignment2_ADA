@@ -2,6 +2,7 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
     protected double distance;
     int x2;
     int y2;
+    int interation;
 
     public CoordinateWithDistance(int x, int y, int x_2, int y_2, double d) {
         super(x, y);
@@ -37,7 +38,7 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
 
     @Override
     public String toString() {
-        return "([" + x + ", " + y + "], " + "[" + x2 + ", " + y2 + "] : " +distance +"), ";
+        return "([" + x + ", " + y + "], " + "[" + x2 + ", " + y2 + "] : " +distance +") ";
     }
 
     @Override
@@ -49,5 +50,24 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
             return 0;
         }
         return -1;
+    }
+
+
+    @Override
+    public boolean equals (Object object) {
+        boolean result = false;
+        if (object == null || object.getClass() != getClass()) {
+            result = false;
+        } else {
+            CoordinateWithDistance c = (CoordinateWithDistance) object;
+            if (((this.x == (c.getX()) && this.y == (c.getY())) && (this.x2 == (c.getX2()) && this.y2 == (c.getY2()))
+                    && (this.distance == (c.getDistance()) ))
+            || ((this.x == (c.getX2()) && this.y == (c.getY2())) && (this.x2 == (c.getX()) && this.y2 == (c.getY()))
+                    && (this.distance == (c.getDistance()) )))
+            {
+                result = true;
+            }
+        }
+        return result;
     }
 }
