@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class BruteForce {
+public class GetInteriorAngles {
     protected static ArrayList<Coordinate> points;
     static ArrayList<CoordinateWithDistance> distanceBetweenPoints;
     protected static int n;
@@ -9,7 +9,7 @@ public class BruteForce {
     static int currentAcrossPoint;
     static int pointsPerPoint;
 
-    public BruteForce(ArrayList<Coordinate> points) {
+    public GetInteriorAngles(ArrayList<Coordinate> points) {
         distanceBetweenPoints = new ArrayList<>();
         this.points = points;
         this.n = points.size();
@@ -18,7 +18,7 @@ public class BruteForce {
         this.pointsPerPoint = points.size()-3;
     }
 
-    public ArrayList<CoordinateWithDistance> startBruteForce(){
+    public ArrayList<CoordinateWithDistance> getAngles(){
         System.out.println("-------------");
         changeCoordinateMethod(iterations);
        // System.out.println(sum);

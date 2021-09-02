@@ -1,11 +1,7 @@
-import com.sun.javafx.geom.Line2D;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.*;
 
 public class Shape extends Component {
 
@@ -77,12 +73,18 @@ public class Shape extends Component {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
-        BruteForce bf = new BruteForce(points);
-        distanceBetweenPoints = bf.startBruteForce();
+        GetInteriorAngles ga = new GetInteriorAngles(points);
+        //this gets all the interior angles for the polygon
+        distanceBetweenPoints = ga.getAngles();
+        Greedy greedy = new Greedy(distanceBetweenPoints);
+        distanceBetweenPoints = greedy.startGreedy();
         System.out.println("number of lines: " + distanceBetweenPoints.size());
-        System.out.println(distanceBetweenPoints);
+//        System.out.println(distanceBetweenPoints);
 
-        //drawLines(g, distanceBetweenPoints);
+        for(CoordinateWithDistance line : distanceBetweenPoints){
+            g.setColor(Color.BLUE);
+            g.drawLine(line.x, line.y, line.x2, line.y2);
+        }
 
 
     }
