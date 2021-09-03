@@ -25,7 +25,7 @@ public class Demo extends JPanel{
         setBackground(Color.PINK);
 
         add(topPanel, BorderLayout.NORTH);
-        Shape s = new Shape(PANEL_WIDTH, PANEL_HEIGHT, 5);
+        Shape s = new Shape(PANEL_WIDTH, PANEL_HEIGHT, 15);
         add(s, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
     }

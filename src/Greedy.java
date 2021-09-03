@@ -26,7 +26,9 @@ public class Greedy {
 
             //checks first if the points are the same then if they are not the same checks if there is an intersection
             lineList.removeIf(line -> !(temp.x == line.x && temp.y == line.y
-                    || temp.x2 == line.x2 && temp.y2 == line.y2)
+                    || temp.x2 == line.x2 && temp.y2 == line.y2
+                    || temp.x == line.x2 && temp.y == line.y2
+                    || temp.x2 == line.x && temp.y2 == line.y)
                     && (Line2D.linesIntersect(temp.x, temp.y, temp.x2, temp.y2
                     , line.x, line.y, line.x2, line.y2)));
 
