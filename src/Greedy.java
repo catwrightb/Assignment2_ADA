@@ -19,11 +19,15 @@ public class Greedy {
 
         while (!lineList.isEmpty()) {
             greedyLines.add(lineList.get(lineList.size() - 1));
-            CoordinateWithDistance temp = lineList.get(lineList.size() - 1);
-            for (int i = 0; i < lineList.size() - 1; i++) {
-                if (DoesIntersect(temp.x, temp.y, temp.x2, temp.y2
+//            CoordinateWithDistance temp = lineList.get(lineList.size() - 1);
+            for (int i = 0; i < lineList.size(); i++) {
+                if ((DoesIntersect(lineList.get(lineList.size() - 1).x
+                        , lineList.get(lineList.size() - 1).y
+                        , lineList.get(lineList.size() - 1).x2
+                        , lineList.get(lineList.size() - 1).y2
                         , lineList.get(i).x, lineList.get(i).y
-                        , lineList.get(i).x2, lineList.get(i).y2)) {
+                        , lineList.get(i).x2, lineList.get(i).y2)
+                        && !(greedyLines.get(greedyLines.size() - 1).equals(lineList.get(i))))) {
                     lineList.remove(lineList.get(i));
                     System.out.println(lineList);
                 }
@@ -55,12 +59,7 @@ public class Greedy {
         int d3 = Direction(xc, yc, xd, yd, xa, ya);
         int d4 = Direction(xc, yc, xd, yd, xb, yb);
 
-        System.out.println("d1 = " + d1);
-        System.out.println("d2 = " + d2);
-        System.out.println("d3 = " + d3);
-        System.out.println("d4 = " + d4);
-
-        if (d1 != d2 && d3 != d4) {
+        if (d1 != d3 && d2 != d4) {
             System.out.println(true);
             return true; //this just checks if the 2 line segments straddle one another
         }
