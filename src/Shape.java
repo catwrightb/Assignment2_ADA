@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.*;
 
+//TODO need to fix brute force to use the GetInteriorAngle class
+//TODO create gui display to show the paths of different approaches, maybe time comparison too
+
 public class Shape extends Component {
 
     private int width;
