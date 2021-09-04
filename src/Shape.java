@@ -1,17 +1,13 @@
-import com.sun.javafx.geom.Line2D;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.*;
 
 public class Shape extends Component {
 
-    private int width;
-    private int height;
-    private int n;
+    private final int width;
+    private final int height;
+    private final int n;
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT, int sides) {
@@ -31,19 +27,19 @@ public class Shape extends Component {
         int x = width/2;
         int y = height/2;
 
-        //draws circle to check points are along the circle diamemter
+        //draws circle to check points are along the circle diameter
         g.setColor(Color.MAGENTA);
         g.drawOval(x-radius, y-radius, 2*radius, 2*radius);
 
        // point at center of circle
         g.fillOval(x, y, 2,2);
 
-        //gathers coordinates for polygon
-        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        //Gather coordinates for polygon
+        ArrayList<Coordinate> coordinates = new ArrayList<>();
         //back up list that matches the coordinate list
-        ArrayList<Coordinate> points = new ArrayList<Coordinate>();
+        ArrayList<Coordinate> points = new ArrayList<>();
         //collects the distances of the interior edges
-        ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
+        ArrayList<CoordinateWithDistance> distanceBetweenPoints;
 
 
         int m = Math.min(x, y);
@@ -77,12 +73,18 @@ public class Shape extends Component {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
-        BruteForce bf = new BruteForce(points);
-        distanceBetweenPoints = bf.startBruteForce();
+        GetInteriorAngles ga = new GetInteriorAngles(points);
+        //this gets all the interior angles for the polygon
+        distanceBetweenPoints = ga.getAngles();
+        Greedy greedy = new Greedy(distanceBetweenPoints);
+        distanceBetweenPoints = greedy.startGreedy();
         System.out.println("number of lines: " + distanceBetweenPoints.size());
-        System.out.println(distanceBetweenPoints);
+//        System.out.println(distanceBetweenPoints);
 
-        //drawLines(g, distanceBetweenPoints);
+        for(CoordinateWithDistance line : distanceBetweenPoints){
+            g.setColor(Color.BLUE);
+            g.drawLine(line.x, line.y, line.x2, line.y2);
+        }
 
 
     }

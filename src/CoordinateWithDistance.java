@@ -1,11 +1,15 @@
 public class CoordinateWithDistance extends Coordinate implements Comparable<CoordinateWithDistance>{
     protected double distance;
+    Coordinate pointStart;
+    Coordinate pointEnd;
     int x2;
     int y2;
     int interation;
 
     public CoordinateWithDistance(int x, int y, int x_2, int y_2, double d) {
         super(x, y);
+        this.pointStart = new Coordinate(x,y);
+        this.pointEnd = new Coordinate(x2,y2);
         distance = d;
         x2= x_2;
         y2 = y_2;
