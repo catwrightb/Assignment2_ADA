@@ -4,6 +4,8 @@ import javax.swing.*;
 public class Demo extends JPanel{
     public final int PANEL_WIDTH = 500;
     public final int PANEL_HEIGHT = 500;
+    //private DrawingPanel drawPanel;  //innerclass
+    private String[] values = new String[] {"4", "5", "6", "7", "8", "9"};
 
 
     public Demo() {
@@ -11,9 +13,7 @@ public class Demo extends JPanel{
         //drawPanel = new DrawingPanel();     //create DrawingPanel and add to center
         //add(drawPanel, BorderLayout.CENTER);
         JPanel topPanel = new JPanel();
-        //private DrawingPanel drawPanel;  //innerclass
-        String[] values = new String[]{"4", "5", "6", "7", "8", "9"};
-        JComboBox<String> testCombo = new JComboBox<>(values);
+        JComboBox<String> testCombo = new JComboBox<String>(values);
         JButton submitButton = new JButton("Submit");
         topPanel.add(testCombo);
         topPanel.add(submitButton);
@@ -25,8 +25,7 @@ public class Demo extends JPanel{
         setBackground(Color.PINK);
 
         add(topPanel, BorderLayout.NORTH);
-        Shape s = new Shape(PANEL_WIDTH, PANEL_HEIGHT, 9);
-        add(s, BorderLayout.CENTER);
+        add(new Shape(PANEL_WIDTH, PANEL_HEIGHT, 5), BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
