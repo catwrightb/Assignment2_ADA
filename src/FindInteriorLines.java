@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class GetInteriorAngles {
+public class FindInteriorLines {
     protected static ArrayList<Coordinate> points;
     static ArrayList<CoordinateWithDistance> distanceBetweenPoints;
     protected static int n;
@@ -9,7 +9,7 @@ public class GetInteriorAngles {
     static int currentAcrossPoint;
     static int pointsPerPoint;
 
-    public GetInteriorAngles(ArrayList<Coordinate> points) {
+    public FindInteriorLines(ArrayList<Coordinate> points) {
         distanceBetweenPoints = new ArrayList<>();
         this.points = points;
         this.n = points.size();
@@ -18,7 +18,7 @@ public class GetInteriorAngles {
         this.pointsPerPoint = points.size()-3;
     }
 
-    public ArrayList<CoordinateWithDistance> getAngles(){
+    public ArrayList<CoordinateWithDistance> startInteriorLineSearch(){
         System.out.println("-------------");
         changeCoordinateMethod(iterations);
        // System.out.println(sum);
@@ -61,6 +61,7 @@ public class GetInteriorAngles {
         double a = Math.sqrt(Math.pow(x_2 - x_1, 2) + Math.pow(y_2 - y_1, 2));
         CoordinateWithDistance coord = new CoordinateWithDistance((int)x_1, (int)y_1, (int)x_2, (int)y_2, a);
 
+        //checks that the interior line hasn't already been added an
         if (!distanceBetweenPoints.contains(coord)){
             distanceBetweenPoints.add(coord);
         }

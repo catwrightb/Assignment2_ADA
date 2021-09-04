@@ -1,11 +1,7 @@
-import com.sun.javafx.geom.Line2D;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.*;
 
 //TODO need to fix brute force to use the GetInteriorAngle class
 //TODO create gui display to show the paths of different approaches, maybe time comparison too
@@ -80,8 +76,10 @@ public class Shape extends Component {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
-        BruteForce bf = new BruteForce(points);
-        distanceBetweenPoints = bf.startBruteForce();
+
+
+        FindInteriorLines bf = new FindInteriorLines(points);
+        distanceBetweenPoints = bf.startInteriorLineSearch();
         System.out.println("number of lines: " + distanceBetweenPoints.size());
         System.out.println(distanceBetweenPoints);
 

@@ -1,89 +1,144 @@
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class BruteForce {
-    protected static ArrayList<Coordinate> points;
-    static ArrayList<CoordinateWithDistance> distanceBetweenPoints;
-    protected static int n;
-    protected static int iterations;
-    static int currentAcrossPoint;
-    static int pointsPerPoint;
+    ArrayList<CoordinateWithDistance> interiorLineList;
+    int exteriorSides; //number of sides
+    int interiorEdges;
+    int catalina; //number of combinations
+    ArrayList<Combo> arrayOfOptions;
+    CoordinateWithDistance cd;
+    int c;
+    int n;
+    int o;
 
-    public BruteForce(ArrayList<Coordinate> points) {
-        distanceBetweenPoints = new ArrayList<>();
-        this.points = points;
-        this.n = points.size();
-        this.iterations = 0;
-        this.currentAcrossPoint = 2;
-        this.pointsPerPoint = points.size()-3;
-    }
+    public BruteForce(ArrayList<CoordinateWithDistance> lineList, int sides) {
+        this.interiorLineList = lineList;
+        this.interiorEdges = lineList.size();
+        exteriorSides = sides;
+        CatalinaNumber num = new CatalinaNumber(sides);
+        catalina = num.catalina;
 
-    public ArrayList<CoordinateWithDistance> startBruteForce(){
-        System.out.println("-------------");
-        changeCoordinateMethod(iterations);
-        // System.out.println(sum);
-        Collections.sort(distanceBetweenPoints);
-        return distanceBetweenPoints;
+        recursiveFindCombos(0);
+
 
     }
 
-    //this method rotates through the coordinates and calls to the angleChecker method
-    public static void changeCoordinateMethod( int i){
+    public void recursiveFindCombos(int i){
+        c = i;
+        n = i+1;
+        o = i+2;
 
-        if (i != n-2) { //3
-            //int last = (i - 2 + n) % n;
-            int across = (i + currentAcrossPoint) % n;
-            double x1 = points.get(i).x;
-            double y1 = points.get(i).y;
-            double x2 = points.get(across).x ;
-            double y2 = points.get(across).y;
-//            double x3 = points.get(last).x ;
-//            double y3 = points.get(last).y ;
-
-            polygonAngleCheck(x1,y1,x2,y2);
-            pointsPerPoint--;
-
-            if(pointsPerPoint == 0){
-                currentAcrossPoint = 2;
-                pointsPerPoint = points.size()-3;
-                changeCoordinateMethod(i+1);
-            }
-            else {
-                currentAcrossPoint++;
-                changeCoordinateMethod(i);
-            }
+        //recursive through points
+        if (i != interiorEdges-1){
+            cd = interiorLineList.get(i);
+            twoLineCheck();
 
         }
 
     }
 
-    public static void polygonAngleCheck(double x_1, double y_1, double x_2,  double y_2){
-        double a = Math.sqrt(Math.pow(x_2 - x_1, 2) + Math.pow(y_2 - y_1, 2));
-        CoordinateWithDistance coord = new CoordinateWithDistance((int)x_1, (int)y_1, (int)x_2, (int)y_2, a);
+    public void twoLineCheck(){
 
-        if (!distanceBetweenPoints.contains(coord)){
-            distanceBetweenPoints.add(coord);
+        CoordinateWithDistance nd = interiorLineList.get(n);
+
+        if (!Line2D.linesIntersect(cd.x, cd.y, cd.x2, cd.y2, nd.x, nd.y, nd.x2, nd.y2)){
+            threeLineCheck(cd, nd, o);
         }
 
-        //code to get angles below, not particularly useful currently
-//        double a = Math.sqrt(Math.pow(x_2 - x_1, 2) + Math.pow(y_2 - y_1, 2)); // distance from 1 to 2
-//        distanceBetweenPoints.add(new CoordinateWithDistance( (int)x_1, (int)y_1, (int)x_2, (int)y_2, a));
-////        double b = Math.sqrt(Math.pow(x_3 - x_2, 2) + Math.pow(y_3 - y_2, 2)); // distance from 2 to 3
-////        double c = Math.sqrt(Math.pow(x_1 - x_3, 2) + Math.pow(y_1 - y_3, 2)); // distance from 3 to 1
-////        //distanceBetweenPoints.add(new CoordinateWithDistance( (int)x_1, (int)y_1, (int)x_3, (int)y_3, c));
-////        addingToList(x_1, y_1, x_3, y_3, c);
-//        //Get angles ***
-//        double triangleAngle1 = Math.toDegrees(Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b)));
-//        double triangleAngle2 = Math.toDegrees(Math.acos((Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2 * c * b)));
-//        double triangleAngle3 = Math.toDegrees(Math.acos((Math.pow(c, 2) + Math.pow(a, 2) - Math.pow(b, 2)) / (2 * a * c)));
-//
-////        distanceBetweenPoints.contains()
+        if (n == interiorEdges-1){
+            recursiveFindCombos(c++);
+        }
+        else {
+            n++;
+            twoLineCheck();
+        }
 
-//        return triangleAngle1 + triangleAngle2 + triangleAngle3;
     }
 
 
+    public void threeLineCheck(CoordinateWithDistance cd, CoordinateWithDistance nd, int o){ //o = 2, n = 1
+        CoordinateWithDistance od = interiorLineList.get(o);
+
+        if (!Line2D.linesIntersect(cd.x, cd.y, cd.x2, cd.y2, od.x, od.y, od.x2, od.y2) ||
+                !Line2D.linesIntersect(od.x, od.y, od.x2, od.y2, nd.x, nd.y, nd.x2, nd.y2)){
+
+            Combo newCombo = new Combo(cd, nd, od, exteriorSides);
+            if (!arrayOfOptions.contains(newCombo)){
+                arrayOfOptions.add(newCombo);
+            }
+        }
+
+        if (o == interiorEdges-1){
+            n++;
+            twoLineCheck();
+        }
+        else {
+            o++;
+            threeLineCheck(cd, nd, o);
+        }
+    }
 
 
+}
 
+
+class Combo{
+    CoordinateWithDistance a;
+    CoordinateWithDistance b;
+    CoordinateWithDistance c;
+    double sumOfDistances;
+    int exteriorSides;
+
+    public Combo(CoordinateWithDistance a, CoordinateWithDistance b, CoordinateWithDistance c, int exteriorSides) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.exteriorSides = exteriorSides-3;
+        this.sumOfDistances = ((a.getDistance() + b.getDistance() + c.getDistance())/(exteriorSides));
+    }
+
+    public CoordinateWithDistance getA() {
+        return a;
+    }
+
+    public CoordinateWithDistance getB() {
+        return b;
+    }
+
+
+    public CoordinateWithDistance getC() {
+        return c;
+    }
+
+    public double getTotal() {
+        return sumOfDistances;
+    }
+
+    @Override
+    public String toString() {
+        return "Combo {" +
+                " a = " + a +
+                ", b = " + b +
+                ", c = " + c +
+                ", sumOfDistances=" + sumOfDistances + "}\n";
+    }
+
+    @Override
+    public boolean equals (Object object) {
+        boolean result = false;
+        if (object == null || object.getClass() != getClass()) {
+            result = false;
+        } else {
+            Combo c = (Combo) object;
+            if ((this.a == (c.getA()) && this.b == (c.getB()) && this.c == (c.getC())) ||
+                    (this.a == (c.getB()) && this.b == (c.getC()) && this.c == (c.getA())) ||
+                    (this.a == (c.getC()) && this.b == (c.getA()) && this.c == (c.getB()))
+            )
+            {
+                result = true;
+            }
+        }
+        return result;
+    }
 }
