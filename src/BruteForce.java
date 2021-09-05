@@ -1,5 +1,6 @@
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class BruteForce {
     ArrayList<CoordinateWithDistance> interiorLineList;
@@ -11,6 +12,10 @@ public class BruteForce {
     int c;
     int n;
     int o;
+    int i = 1;
+    ArrayList<CoordinateWithDistance[]> lines;
+    Stack<CoordinateWithDistance> test = new Stack<>();
+
 
     public BruteForce(ArrayList<CoordinateWithDistance> lineList, int sides) {
         this.interiorLineList = lineList;
@@ -19,15 +24,56 @@ public class BruteForce {
         CatalinaNumber num = new CatalinaNumber(sides);
         catalina = num.catalina;
 
-        recursiveFindCombos(0);
 
 
     }
+
+    public ArrayList<Combo> startBrute(){
+        recursiveFindCombos(0);
+
+        return arrayOfOptions;
+
+    }
+
+
+    public void getLines(int i){
+
+        //i= 2
+        if (i != exteriorSides-3){ // i != (6-3)
+            int nextline = (i + 1) % n;
+            //line i
+            CoordinateWithDistance x = interiorLineList.get(i);
+            test.add(x);
+            //line i+
+            CoordinateWithDistance y = interiorLineList.get(nextline);
+            test.add(y);
+
+        }
+
+
+    }
+
+    public void checkIntersection(CoordinateWithDistance x, CoordinateWithDistance y){
+        if (!Line2D.linesIntersect(x.x, x.y, x.x2, x.y2, y.x, y.y, y.x2, y.y2)){
+            //if lines DON'T intersect
+
+        }
+        else {
+            //if lines DO intersect
+
+        }
+
+
+    }
+
+
 
     public void recursiveFindCombos(int i){
         c = i;
         n = i+1;
         o = i+2;
+
+
 
         //recursive through points
         if (i != interiorEdges-1){
@@ -47,7 +93,9 @@ public class BruteForce {
         }
 
         if (n == interiorEdges-1){
-            recursiveFindCombos(c++);
+            c++;
+            n = c+1; //reset n to 1 plus n
+            recursiveFindCombos(c);
         }
         else {
             n++;
@@ -71,6 +119,7 @@ public class BruteForce {
 
         if (o == interiorEdges-1){
             n++;
+            o = n+1; //reset o to +1 of n
             twoLineCheck();
         }
         else {
@@ -84,6 +133,7 @@ public class BruteForce {
 
 
 class Combo{
+    ArrayList<CoordinateWithDistance[]> arrayList;
     CoordinateWithDistance a;
     CoordinateWithDistance b;
     CoordinateWithDistance c;
@@ -124,21 +174,21 @@ class Combo{
                 ", sumOfDistances=" + sumOfDistances + "}\n";
     }
 
-    @Override
-    public boolean equals (Object object) {
-        boolean result = false;
-        if (object == null || object.getClass() != getClass()) {
-            result = false;
-        } else {
-            Combo c = (Combo) object;
-            if ((this.a == (c.getA()) && this.b == (c.getB()) && this.c == (c.getC())) ||
-                    (this.a == (c.getB()) && this.b == (c.getC()) && this.c == (c.getA())) ||
-                    (this.a == (c.getC()) && this.b == (c.getA()) && this.c == (c.getB()))
-            )
-            {
-                result = true;
-            }
-        }
-        return result;
-    }
+//    @Override
+//    public boolean equals (Object object) {
+//        boolean result = false;
+//        if (object == null || object.getClass() != getClass()) {
+//            result = false;
+//        } else {
+//            Combo c = (Combo) object;
+//            if ((this.a == (c.getA()) && this.b == (c.getB()) && this.c == (c.getC())) ||
+//                    (this.a == (c.getB()) && this.b == (c.getC()) && this.c == (c.getA())) ||
+//                    (this.a == (c.getC()) && this.b == (c.getA()) && this.c == (c.getB()))
+//            )
+//            {
+//                result = true;
+//            }
+//        }
+//        return result;
+//    }
 }

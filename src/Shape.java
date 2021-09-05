@@ -83,6 +83,8 @@ public class Shape extends Component {
         System.out.println("number of lines: " + distanceBetweenPoints.size());
         System.out.println(distanceBetweenPoints);
 
+        System.out.println(distanceBetweenPoints.get(8));
+
         //drawLines(g, distanceBetweenPoints);
 
 

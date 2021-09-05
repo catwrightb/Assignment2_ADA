@@ -22,7 +22,7 @@ public class FindInteriorLines {
         System.out.println("-------------");
         changeCoordinateMethod(iterations);
        // System.out.println(sum);
-        Collections.sort(distanceBetweenPoints);
+       // Collections.sort(distanceBetweenPoints);
         return distanceBetweenPoints;
 
     }
