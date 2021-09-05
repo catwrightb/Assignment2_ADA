@@ -1,194 +1,107 @@
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class BruteForce {
-    ArrayList<CoordinateWithDistance> interiorLineList;
-    int exteriorSides; //number of sides
-    int interiorEdges;
-    int catalina; //number of combinations
-    ArrayList<Combo> arrayOfOptions;
-    CoordinateWithDistance cd;
-    int c;
-    int n;
-    int o;
-    int i = 1;
-    ArrayList<CoordinateWithDistance[]> lines;
-    Stack<CoordinateWithDistance> test = new Stack<>();
+    protected static ArrayList<Coordinate> points;
+    static ArrayList<Triangle> triangles;
+    protected static int n;
+    protected static int iterations;
+    static int currentAcrossPoint;
+    static int pointsPerPoint;
+    static int next;
 
 
-    public BruteForce(ArrayList<CoordinateWithDistance> lineList, int sides) {
-        this.interiorLineList = lineList;
-        this.interiorEdges = lineList.size();
-        exteriorSides = sides;
-        CatalinaNumber num = new CatalinaNumber(sides);
-        catalina = num.catalina;
+    public BruteForce(ArrayList<Coordinate> points) {
+        this.points = points;
+        this.n = points.size();
+        this.iterations = 0;
+        this.currentAcrossPoint = 1;
+        this.pointsPerPoint = points.size() - 3;
+        triangles = new ArrayList<>();
+        next = (-2 + n) % n;
+    }
 
-
+    public ArrayList<Triangle> startInteriorLineSearch() {
+        System.out.println("-------------");
+        changeCoordinateMethod(iterations);
+        System.out.println(triangles);
+        // Collections.sort(distanceBetweenPoints);
+        return triangles;
 
     }
 
-    public ArrayList<Combo> startBrute(){
-        recursiveFindCombos(0);
+    //this method rotates through the coordinates and calls to the angleChecker method
+    public static void changeCoordinateMethod(int i) {
+        Boolean intersect = false;
 
-        return arrayOfOptions;
+        if (i != 3 ) { //3
+            System.out.println(" -------------- Round " + i);
+            int last = (i - 1 + n) % n; //last point
+            System.out.println(last);
+//            int next = (i - 2 + n) % n; //second to last point
+            System.out.println(next);
+            double x1 = points.get(i).x;
+            double y1 = points.get(i).y;
+            double x2 = points.get(next).x;
+            double y2 = points.get(next).y;
+            double x3 = points.get(last).x;
+            double y3 = points.get(last).y;
 
-    }
-
-
-    public void getLines(int i){
-
-        //i= 2
-        if (i != exteriorSides-3){ // i != (6-3)
-            int nextline = (i + 1) % n;
-            //line i
-            CoordinateWithDistance x = interiorLineList.get(i);
-            test.add(x);
-            //line i+
-            CoordinateWithDistance y = interiorLineList.get(nextline);
-            test.add(y);
-
-        }
-
-
-    }
-
-    public void checkIntersection(CoordinateWithDistance x, CoordinateWithDistance y){
-        if (!Line2D.linesIntersect(x.x, x.y, x.x2, x.y2, y.x, y.y, y.x2, y.y2)){
-            //if lines DON'T intersect
-
-        }
-        else {
-            //if lines DO intersect
-
-        }
-
-
-    }
-
-
-
-    public void recursiveFindCombos(int i){
-        c = i;
-        n = i+1;
-        o = i+2;
-
-
-
-        //recursive through points
-        if (i != interiorEdges-1){
-            cd = interiorLineList.get(i);
-            twoLineCheck();
-
-        }
-
-    }
-
-    public void twoLineCheck(){
-
-        CoordinateWithDistance nd = interiorLineList.get(n);
-
-        if (!Line2D.linesIntersect(cd.x, cd.y, cd.x2, cd.y2, nd.x, nd.y, nd.x2, nd.y2)){
-            threeLineCheck(cd, nd, o);
-        }
-
-        if (n == interiorEdges-1){
-            c++;
-            n = c+1; //reset n to 1 plus n
-            recursiveFindCombos(c);
-        }
-        else {
-            n++;
-            twoLineCheck();
-        }
-
-    }
-
-
-    public void threeLineCheck(CoordinateWithDistance cd, CoordinateWithDistance nd, int o){ //o = 2, n = 1
-        CoordinateWithDistance od = interiorLineList.get(o);
-
-        if (!Line2D.linesIntersect(cd.x, cd.y, cd.x2, cd.y2, od.x, od.y, od.x2, od.y2) ||
-                !Line2D.linesIntersect(od.x, od.y, od.x2, od.y2, nd.x, nd.y, nd.x2, nd.y2)){
-
-            Combo newCombo = new Combo(cd, nd, od, exteriorSides);
-            if (!arrayOfOptions.contains(newCombo)){
-                arrayOfOptions.add(newCombo);
-            }
-        }
-
-        if (o == interiorEdges-1){
-            n++;
-            o = n+1; //reset o to +1 of n
-            twoLineCheck();
-        }
-        else {
-            o++;
-            threeLineCheck(cd, nd, o);
-        }
-    }
-
-
-}
-
-
-class Combo{
-    ArrayList<CoordinateWithDistance[]> arrayList;
-    CoordinateWithDistance a;
-    CoordinateWithDistance b;
-    CoordinateWithDistance c;
-    double sumOfDistances;
-    int exteriorSides;
-
-    public Combo(CoordinateWithDistance a, CoordinateWithDistance b, CoordinateWithDistance c, int exteriorSides) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
-        this.exteriorSides = exteriorSides-3;
-        this.sumOfDistances = ((a.getDistance() + b.getDistance() + c.getDistance())/(exteriorSides));
-    }
-
-    public CoordinateWithDistance getA() {
-        return a;
-    }
-
-    public CoordinateWithDistance getB() {
-        return b;
-    }
-
-
-    public CoordinateWithDistance getC() {
-        return c;
-    }
-
-    public double getTotal() {
-        return sumOfDistances;
-    }
-
-    @Override
-    public String toString() {
-        return "Combo {" +
-                " a = " + a +
-                ", b = " + b +
-                ", c = " + c +
-                ", sumOfDistances=" + sumOfDistances + "}\n";
-    }
-
-//    @Override
-//    public boolean equals (Object object) {
-//        boolean result = false;
-//        if (object == null || object.getClass() != getClass()) {
-//            result = false;
-//        } else {
-//            Combo c = (Combo) object;
-//            if ((this.a == (c.getA()) && this.b == (c.getB()) && this.c == (c.getC())) ||
-//                    (this.a == (c.getB()) && this.b == (c.getC()) && this.c == (c.getA())) ||
-//                    (this.a == (c.getC()) && this.b == (c.getA()) && this.c == (c.getB()))
-//            )
-//            {
-//                result = true;
+//            for (int j = 0; j < triangles.size(); j++) {
+//
+//                 if (Line2D.linesIntersect(x1, y1, x2, y2, triangles.get(j).c.x,
+//                        triangles.get(j).c.y, triangles.get(j).c.x2, triangles.get(j).c.y2)) {
+//                    intersect = true;
+//                    break;
+//                }
 //            }
+
+            if (!intersect){
+                polygonAngleCheck(x1, y1, x2, y2, x3, y3, i);
+            }
+
+            n--;
+            changeCoordinateMethod(i + 1);
+
+//            pointsPerPoint--;
+//
+//            if (pointsPerPoint == 0) {
+//                currentAcrossPoint = 1;
+//                pointsPerPoint = points.size() - 3;
+//                changeCoordinateMethod(i + 1);
+//            } else {
+//                currentAcrossPoint++;
+//                changeCoordinateMethod(i);
+//            }
+
+        }
+    }
+
+    public static double polygonAngleCheck ( double x_1, double y_1, double x_2, double y_2, double x_3,
+                                             double y_3, int i){
+
+        //Get length of each side
+        double c = Math.sqrt(Math.pow(x_2 - x_1, 2) + Math.pow(y_2 - y_1, 2)); // distance from 1 to 2
+        double b = Math.sqrt(Math.pow(x_3 - x_2, 2) + Math.pow(y_3 - y_2, 2)); // distance from 2 to 3
+        double a = Math.sqrt(Math.pow(x_1 - x_3, 2) + Math.pow(y_1 - y_3, 2)); // distance from 3 to 1
+
+        CoordinateWithDistance aSide = new CoordinateWithDistance((int) x_1, (int) y_1, (int) x_3, (int) y_3, a);
+        CoordinateWithDistance bSide = new CoordinateWithDistance((int) x_3, (int) y_3, (int) x_2, (int) y_2, b);
+        CoordinateWithDistance cSide = new CoordinateWithDistance((int) x_1, (int) y_1, (int) x_2, (int) y_2, c);
+
+        Triangle triangle = new Triangle(aSide, bSide, cSide, c);
+
+//        //checks that the interior line hasn't already been added an
+//        if (!triangles.contains(triangle)) {
+//            triangles.add(triangle);
 //        }
-//        return result;
-//    }
+
+        triangles.add(triangle);
+
+        return b;
+
+    }
+
 }
+
+

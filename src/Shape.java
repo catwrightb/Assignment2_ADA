@@ -44,6 +44,8 @@ public class Shape extends Component {
         //collects the distances of the interior edges
         ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
 
+        ArrayList<Triangle> triangleslist = new ArrayList<>();
+
 
         int m = Math.min(x, y);
         int c = 4 * m / 5;
@@ -76,16 +78,23 @@ public class Shape extends Component {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
+        BruteForce bf =  new BruteForce(points);
+        triangleslist = bf.startInteriorLineSearch();
 
 
-        FindInteriorLines bf = new FindInteriorLines(points);
-        distanceBetweenPoints = bf.startInteriorLineSearch();
-        System.out.println("number of lines: " + distanceBetweenPoints.size());
-        System.out.println(distanceBetweenPoints);
 
-        System.out.println(distanceBetweenPoints.get(8));
+//        FindInteriorLines bf = new FindInteriorLines(points);
+//        distanceBetweenPoints = bf.startInteriorLineSearch();
+//        System.out.println("number of lines: " + distanceBetweenPoints.size());
+//        System.out.println(distanceBetweenPoints);
+//
+//        System.out.println(distanceBetweenPoints.get(8));
 
         //drawLines(g, distanceBetweenPoints);
+        for (int i = 0; i < triangleslist.size(); i++) {
+            g.setColor(Color.green);
+            g.drawLine(triangleslist.get(i).c.x, triangleslist.get(i).c.y, triangleslist.get(i).c.x2, triangleslist.get(i).c.y2);
+        }
 
 
     }
