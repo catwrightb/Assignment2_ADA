@@ -94,6 +94,7 @@ public class Shape extends Component {
         for (int i = 0; i < triangleslist.size(); i++) {
             g.setColor(Color.green);
             g.drawLine(triangleslist.get(i).c.x, triangleslist.get(i).c.y, triangleslist.get(i).c.x2, triangleslist.get(i).c.y2);
+            System.out.println(triangleslist.get(i).c.toString());
         }
 
 

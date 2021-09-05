@@ -1,4 +1,3 @@
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class BruteForce {
@@ -8,7 +7,8 @@ public class BruteForce {
     protected static int iterations;
     static int currentAcrossPoint;
     static int pointsPerPoint;
-    static int next;
+    static int secondToLast;
+    static int j;
 
 
     public BruteForce(ArrayList<Coordinate> points) {
@@ -18,13 +18,26 @@ public class BruteForce {
         this.currentAcrossPoint = 1;
         this.pointsPerPoint = points.size() - 3;
         triangles = new ArrayList<>();
-        next = (-2 + n) % n;
     }
 
     public ArrayList<Triangle> startInteriorLineSearch() {
         System.out.println("-------------");
+        int f = n;
+        System.out.println(f);
+
+        for (int i = 0; i < f-2; i++) {
+            triangles = new ArrayList<>();
+            secondToLast = (i - 2 + f) % f;
+            j = i;
+            System.out.println("----------------------------------- i is : "+i);
+            n = f;
+            changeCoordinateMethod(iterations);
+            j = i;
+            System.out.println(triangles);
+        }
+
         changeCoordinateMethod(iterations);
-        System.out.println(triangles);
+        //System.out.println(triangles);
         // Collections.sort(distanceBetweenPoints);
         return triangles;
 
@@ -35,18 +48,17 @@ public class BruteForce {
         Boolean intersect = false;
 
         if (i != 3 ) { //3
-            System.out.println(" -------------- Round " + i);
-            int last = (i - 1 + n) % n; //last point
-            System.out.println(last);
-//            int next = (i - 2 + n) % n; //second to last point
-            System.out.println(next);
-            double x1 = points.get(i).x;
-            double y1 = points.get(i).y;
-            double x2 = points.get(next).x;
-            double y2 = points.get(next).y;
+           // System.out.println(" -------------- Round " + i);
+            int last = (j - 1 + n) % n; //last point
+           // System.out.println(last);
+           // int secondToLast = (i - 2 + n) % n; //second to last point
+           // System.out.println(secondToLast);
+            double x1 = points.get(j).x;
+            double y1 = points.get(j).y;
+            double x2 = points.get(secondToLast).x;
+            double y2 = points.get(secondToLast).y;
             double x3 = points.get(last).x;
             double y3 = points.get(last).y;
-
 //            for (int j = 0; j < triangles.size(); j++) {
 //
 //                 if (Line2D.linesIntersect(x1, y1, x2, y2, triangles.get(j).c.x,
@@ -55,24 +67,17 @@ public class BruteForce {
 //                    break;
 //                }
 //            }
-
             if (!intersect){
                 polygonAngleCheck(x1, y1, x2, y2, x3, y3, i);
             }
 
             n--;
+            j++;
+            if (j==6){
+                System.out.println("Reset J");
+                j=0;
+            }
             changeCoordinateMethod(i + 1);
-
-//            pointsPerPoint--;
-//
-//            if (pointsPerPoint == 0) {
-//                currentAcrossPoint = 1;
-//                pointsPerPoint = points.size() - 3;
-//                changeCoordinateMethod(i + 1);
-//            } else {
-//                currentAcrossPoint++;
-//                changeCoordinateMethod(i);
-//            }
 
         }
     }
@@ -91,12 +96,13 @@ public class BruteForce {
 
         Triangle triangle = new Triangle(aSide, bSide, cSide, c);
 
-//        //checks that the interior line hasn't already been added an
-//        if (!triangles.contains(triangle)) {
-//            triangles.add(triangle);
-//        }
 
-        triangles.add(triangle);
+        //checks that the interior line hasn't already been added an
+        if (!triangles.contains(triangle)) {
+            triangles.add(triangle);
+        }
+
+//        triangles.add(triangle);
 
         return b;
 
