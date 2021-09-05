@@ -81,6 +81,9 @@ public class Shape extends Component {
         BruteForce bf =  new BruteForce(points);
         triangleslist = bf.startInteriorLineSearch();
 
+        System.out.println(triangleslist);
+        System.out.println(triangleslist.get(0));
+        System.out.println(triangleslist.get(1));
 
 
 //        FindInteriorLines bf = new FindInteriorLines(points);
@@ -91,11 +94,15 @@ public class Shape extends Component {
 //        System.out.println(distanceBetweenPoints.get(8));
 
         //drawLines(g, distanceBetweenPoints);
+        System.out.println("In shape : " + triangleslist);
         for (int i = 0; i < triangleslist.size(); i++) {
             g.setColor(Color.green);
             g.drawLine(triangleslist.get(i).c.x, triangleslist.get(i).c.y, triangleslist.get(i).c.x2, triangleslist.get(i).c.y2);
             System.out.println(triangleslist.get(i).c.toString());
+
         }
+
+
 
 
     }

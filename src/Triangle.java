@@ -28,11 +28,11 @@ class Triangle {
 
     @Override
     public String toString() {
-        return "Triangle{" +
+        return "Triangle {" +
                 "a= " + a +
                 ", b= " + b +
                 ", c= " + c +
-                "}\n";
+                "}";
     }
 
     //    @Override

@@ -4,7 +4,6 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
     Coordinate pointEnd;
     int x2;
     int y2;
-    int interation;
 
     public CoordinateWithDistance(int x, int y, int x_2, int y_2, double d) {
         super(x, y);

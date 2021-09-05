@@ -9,45 +9,76 @@ public class BruteForce {
     static int pointsPerPoint;
     static int secondToLast;
     static int j;
+    static int f;
+    static ArrayList< ArrayList<Triangle>> testList = new ArrayList<>();
 
 
     public BruteForce(ArrayList<Coordinate> points) {
         this.points = points;
         this.n = points.size();
         this.iterations = 0;
-        this.currentAcrossPoint = 1;
         this.pointsPerPoint = points.size() - 3;
         triangles = new ArrayList<>();
     }
 
     public ArrayList<Triangle> startInteriorLineSearch() {
-        System.out.println("-------------");
-        int f = n;
+        //System.out.println("-------------");
+        f = n;
         System.out.println(f);
 
         for (int i = 0; i < f-2; i++) {
             triangles = new ArrayList<>();
             secondToLast = (i - 2 + f) % f;
             j = i;
-            System.out.println("----------------------------------- i is : "+i);
+            //System.out.println("----------------------------------- i is : "+i);
             n = f;
             changeCoordinateMethod(iterations);
             j = i;
-            System.out.println(triangles);
+            //System.out.println(triangles);
+            testList.add(triangles);
         }
 
-        changeCoordinateMethod(iterations);
+
+//        double d = 0.0;
+//        int smallest = 0;
+//        double t = 0;
+//
+//        for (int i = 0; i < testList.size(); i++) {
+//
+//            for (int k = 0; k < n-2; k++) {
+//                d += testList.get(i).get(k).hypothenus;
+//            }
+//
+//            d /= f-3;
+//
+//            if (i == 0){
+//                t = d;
+//            }
+//            else if (d < t){
+//                smallest = i;
+//            }
+//
+//            d = 0.0;
+//        }
+
+
+//        System.out.println("Smallest = "+smallest);
+       // System.out.println("In brute force: "+testList.get(smallest));
         //System.out.println(triangles);
         // Collections.sort(distanceBetweenPoints);
+//        return testList.get(smallest);
+
         return triangles;
 
     }
+
+
 
     //this method rotates through the coordinates and calls to the angleChecker method
     public static void changeCoordinateMethod(int i) {
         Boolean intersect = false;
 
-        if (i != 3 ) { //3
+        if (i != f-3 ) { //3
            // System.out.println(" -------------- Round " + i);
             int last = (j - 1 + n) % n; //last point
            // System.out.println(last);
@@ -71,9 +102,10 @@ public class BruteForce {
                 polygonAngleCheck(x1, y1, x2, y2, x3, y3, i);
             }
 
-            n--;
+           n--;
+
             j++;
-            if (j==6){
+            if (j==f){
                 System.out.println("Reset J");
                 j=0;
             }
@@ -82,7 +114,7 @@ public class BruteForce {
         }
     }
 
-    public static double polygonAngleCheck ( double x_1, double y_1, double x_2, double y_2, double x_3,
+    public static void polygonAngleCheck ( double x_1, double y_1, double x_2, double y_2, double x_3,
                                              double y_3, int i){
 
         //Get length of each side
@@ -104,7 +136,6 @@ public class BruteForce {
 
 //        triangles.add(triangle);
 
-        return b;
 
     }
 
