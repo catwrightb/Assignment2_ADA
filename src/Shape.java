@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +7,7 @@ import java.util.Random;
 //TODO need to fix brute force to use the GetInteriorAngle class
 //TODO create gui display to show the paths of different approaches, maybe time comparison too
 
-public class Shape extends Component {
+public class Shape extends JPanel {
 
     private int width;
     private int height;
@@ -20,7 +21,9 @@ public class Shape extends Component {
         n = sides;
     }
 
-    public void paint(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         //System.out.println("-----------------------");
         // Retrieve the graphics context; this object is used to paint shapes
@@ -81,9 +84,9 @@ public class Shape extends Component {
         BruteForce bf =  new BruteForce(points);
         triangleslist = bf.startInteriorLineSearch();
 
-        System.out.println(triangleslist);
-        System.out.println(triangleslist.get(0));
-        System.out.println(triangleslist.get(1));
+//        System.out.println(triangleslist);
+//        System.out.println(triangleslist.get(0));
+//        System.out.println(triangleslist.get(1));
 
 
 //        FindInteriorLines bf = new FindInteriorLines(points);
@@ -95,10 +98,10 @@ public class Shape extends Component {
 
         //drawLines(g, distanceBetweenPoints);
         System.out.println("In shape : " + triangleslist);
-        for (int i = 0; i < triangleslist.size(); i++) {
+        for (Triangle triangle : triangleslist) {
             g.setColor(Color.green);
-            g.drawLine(triangleslist.get(i).c.x, triangleslist.get(i).c.y, triangleslist.get(i).c.x2, triangleslist.get(i).c.y2);
-            System.out.println(triangleslist.get(i).c.toString());
+            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
+            System.out.println(triangle.c.toString());
 
         }
 

@@ -11,6 +11,9 @@ public class BruteForce {
     static int j;
     static int f;
     static ArrayList< ArrayList<Triangle>> testList = new ArrayList<>();
+    double d = 0.0;
+    int smallest = 0;
+    double t = 0;
 
 
     public BruteForce(ArrayList<Coordinate> points) {
@@ -39,36 +42,34 @@ public class BruteForce {
         }
 
 
-//        double d = 0.0;
-//        int smallest = 0;
-//        double t = 0;
-//
-//        for (int i = 0; i < testList.size(); i++) {
-//
-//            for (int k = 0; k < n-2; k++) {
-//                d += testList.get(i).get(k).hypothenus;
-//            }
-//
-//            d /= f-3;
-//
-//            if (i == 0){
-//                t = d;
-//            }
-//            else if (d < t){
-//                smallest = i;
-//            }
-//
-//            d = 0.0;
-//        }
+
+
+        for (int i = 0; i < testList.size(); i++) {
+
+            for (int k = 0; k < n-2; k++) {
+                d += testList.get(i).get(k).hypothenus;
+            }
+
+            d /= f-3;
+
+            if (i == 0){
+                t = d;
+            }
+            else if (d < t){
+                smallest = i;
+            }
+
+            d = 0.0;
+        }
 
 
 //        System.out.println("Smallest = "+smallest);
        // System.out.println("In brute force: "+testList.get(smallest));
         //System.out.println(triangles);
         // Collections.sort(distanceBetweenPoints);
-//        return testList.get(smallest);
+       return testList.get(smallest);
 
-        return triangles;
+      //  return triangles;
 
     }
 
