@@ -5,10 +5,12 @@ public class Coordinate{
 
         public int x;
         public int y;
+        boolean visit;
 
         public Coordinate(int x, int y) {
             this.x = x;
             this.y = y;
+            this.visit = false;
         }
 
         @Override

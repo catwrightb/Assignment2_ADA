@@ -12,6 +12,7 @@ public class Shape extends JPanel {
     private int width;
     private int height;
     private int n;
+    BruteForce bruteforce = new BruteForce();
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT, int sides) {
@@ -19,6 +20,7 @@ public class Shape extends JPanel {
         width = PANEL_WIDTH;
         height = PANEL_HEIGHT;
         n = sides;
+
     }
 
     @Override
@@ -81,51 +83,22 @@ public class Shape extends JPanel {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
-        BruteForce bf =  new BruteForce(points);
-        triangleslist = bf.startInteriorLineSearch();
+        bruteforce = new BruteForce(points);
+        triangleslist = bruteforce.startInteriorLineSearch();
 
-//        System.out.println(triangleslist);
-//        System.out.println(triangleslist.get(0));
-//        System.out.println(triangleslist.get(1));
-
-
-//        FindInteriorLines bf = new FindInteriorLines(points);
-//        distanceBetweenPoints = bf.startInteriorLineSearch();
-//        System.out.println("number of lines: " + distanceBetweenPoints.size());
-//        System.out.println(distanceBetweenPoints);
-//
-//        System.out.println(distanceBetweenPoints.get(8));
-
-        //drawLines(g, distanceBetweenPoints);
-        System.out.println("In shape : " + triangleslist);
-        for (Triangle triangle : triangleslist) {
-            g.setColor(Color.green);
-            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-            System.out.println(triangle.c.toString());
-
-        }
-
+        drawLines(g, triangleslist);
 
 
 
     }
 
-    public static void drawLines(Graphics g, ArrayList<CoordinateWithDistance> distanceBetweenPoints){
+    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist){
 
-        CoordinateWithDistance line = distanceBetweenPoints.get(0);
-        //CoordinateWithDistance line1 = distanceBetweenPoints.get(i+1);
-
-        g.setColor(Color.BLUE);
-        g.drawLine(line.x, line.y, line.x2, line.y2);
-
-        for (int j = 1; j < distanceBetweenPoints.size(); j++) {
-            if (line.x == distanceBetweenPoints.get(j).x && line.y == distanceBetweenPoints.get(j).y
-                    && line.distance != distanceBetweenPoints.get(j).distance){
-                CoordinateWithDistance line2 = distanceBetweenPoints.get(j);
-                g.setColor(Color.green);
-                g.drawLine(line2.x, line2.y, line2.x2, line2.y2);
-
-            }
+        System.out.println("In shape : " + triangleslist);
+        for (Triangle triangle : triangleslist) {
+            g.setColor(Color.blue);
+            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
+            System.out.println(triangle.c.toString());
 
         }
 

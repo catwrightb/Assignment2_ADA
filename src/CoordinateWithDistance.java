@@ -5,6 +5,7 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
     int x2;
     int y2;
 
+
     public CoordinateWithDistance(int x, int y, int x_2, int y_2, double d) {
         super(x, y);
         this.pointStart = new Coordinate(x,y);
@@ -12,6 +13,7 @@ public class CoordinateWithDistance extends Coordinate implements Comparable<Coo
         distance = d;
         x2= x_2;
         y2 = y_2;
+
 
     }
 
