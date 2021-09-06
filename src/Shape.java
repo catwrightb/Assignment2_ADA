@@ -12,7 +12,7 @@ public class Shape extends JPanel {
     private int width;
     private int height;
     private int n;
-    BruteForce bruteforce = new BruteForce();
+
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT, int sides) {
@@ -83,7 +83,7 @@ public class Shape extends JPanel {
         g2d.setColor(Color.RED);
         g2d.drawPolygon(polygon);
 
-        bruteforce = new BruteForce(points);
+        BruteForce bruteforce = new BruteForce(points);
         triangleslist = bruteforce.startInteriorLineSearch();
 
         drawLines(g, triangleslist);
