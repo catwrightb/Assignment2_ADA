@@ -1,20 +1,20 @@
 import java.util.Comparator;
 //class to store the coordinate points for the polygon shapes
 
-public class Coordinate{
+public class Coordinate {
 
-        public int x;
-        public int y;
+    public int x;
+    public int y;
 
-        public Coordinate(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
-        @Override
-        public String toString() {
-            return "[" + x + ", " + y + "] ";
-        }
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + "] ";
+    }
 
     public int getX() {
         return x;
@@ -33,14 +33,13 @@ public class Coordinate{
     }
 
     @Override
-    public boolean equals (Object object) {
+    public boolean equals(Object object) {
         boolean result = false;
         if (object == null || object.getClass() != getClass()) {
             result = false;
         } else {
             Coordinate c = (Coordinate) object;
-            if (this.x == (c.getX()) && this.y == (c.getY())  )
-                     {
+            if (this.x == (c.getX()) && this.y == (c.getY())) {
                 result = true;
             }
         }

@@ -26,6 +26,7 @@ public class ExactMethod {
 
     //array list made to store accepted triangles
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
+    private Triangle t;
 
     public ExactMethod() {
     }
@@ -45,19 +46,40 @@ public class ExactMethod {
         Coordinate pointB = pointList.get(j);
         Coordinate pointC = pointList.get(k);
 
+        makeTriangle(pointList, i, j, k);
+
         return distance(pointA.x, pointA.y, pointB.x, pointB.y)
                 + distance(pointB.x, pointB.y, pointC.x, pointC.y)
                 + distance(pointC.x, pointC.y, pointA.x, pointA.y);
     }
 
+    public void makeTriangle(ArrayList<Coordinate> pointList, int i, int j, int k) {
+        Coordinate a = pointList.get(i);
+        Coordinate b = pointList.get(j);
+        Coordinate c = pointList.get(k);
+
+        CoordinateWithDistance lineA = new CoordinateWithDistance(a.x, a.y, b.x, b.y, 0);
+        CoordinateWithDistance lineB = new CoordinateWithDistance(b.x, b.y, c.x, c.y, 0);
+        CoordinateWithDistance lineC = new CoordinateWithDistance(c.x, c.y, a.x, a.y, 0);
+
+        t = new Triangle(lineA, lineB, lineC, 0);
+    }
+
+    public Triangle getT(){
+        return t;
+    }
+
     public double startExact(ArrayList<Coordinate> pointList, int n) {
+
 
         //base case
         if (n <= 3) {
             return 0;
         }
+
         //this table will be to store the sub problem weights
         double[][] costTable = new double[n][n];
+        Triangle[][] cTable = new Triangle[n][n];
 
         for (int g = 0; g < n; g++) {
 
@@ -72,12 +94,24 @@ public class ExactMethod {
                         double x = (costTable[i][k] + costTable[k][j] + weight(pointList, i, j, k));
                         if (x < costTable[i][j]) {
                             costTable[i][j] = x;
+                            cTable[i][j] = t;
                         }
 
                     }
                 }
             }
         }
+        String s = "";
+        for(Triangle[] row : cTable){
+
+            for(Triangle t : row){
+                if(t != null) {
+                    s += t.toString();
+                }
+            }
+            s += "\n";
+        }
+        System.out.println(s);
         return costTable[0][n - 1];
     }
 }
