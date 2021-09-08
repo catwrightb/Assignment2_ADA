@@ -16,7 +16,7 @@ public class Shape extends JPanel {
     private int width;
     private int height;
     private int n;
-    private String[] values = new String[] {"4", "5", "6", "7", "8", "9"};
+    private String[] values = new String[] {"4", "5", "6", "7", "8", "9","10", "11", "12", "13", "14", "15"};
     int number = 0;
     boolean clicked = false;
 

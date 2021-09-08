@@ -42,7 +42,7 @@ public class BruteForce {
             testList.add(triangles);
         }
 
-        if (f == 6){
+        if (f % 2 == 0){
             for (int i = 0; i < 1; i++) {
                 triangles = new ArrayList<>();
                 j = i;
@@ -153,6 +153,7 @@ public class BruteForce {
 
         if (!triangles.contains(triangle)) {
             triangles.add(triangle);
+            pointsTest.add(cSide);
 
         }
 
