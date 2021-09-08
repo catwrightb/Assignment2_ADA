@@ -2,6 +2,15 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/*
+for this method the way I understand is that the greedy method takes a sorted list
+of lines that go between all points in the polygon and finds the smallest possible
+cost for each line drawn between 2 points in the polygon then removes all the
+other lines that intersected the previously chosen the smallest line. then continues
+to do this till there are not more lines in the list. this should ultimately give the
+greedy method answer.
+ */
+
 public class Greedy {
 
     ArrayList<CoordinateWithDistance> lineList;

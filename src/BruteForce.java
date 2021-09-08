@@ -98,7 +98,7 @@ public class BruteForce {
             n--;
             j++;
             if (j==f){
-                System.out.println("Reset J");
+//                System.out.println("Reset J");
                 j=0;
             }
             changeCoordinateMethod(i + 1);
