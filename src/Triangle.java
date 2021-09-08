@@ -28,7 +28,7 @@ class Triangle {
 
     @Override
     public String toString() {
-        return "Triangle {" +
+        return "\nTriangle {" +
                 "a= " + a +
                 ", b= " + b +
                 ", c= " + c +
