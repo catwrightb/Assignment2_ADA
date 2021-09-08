@@ -9,9 +9,9 @@ import java.util.Random;
 
 public class Shape extends JPanel {
 
-    private int width;
-    private int height;
-    private int n;
+    private final int width;
+    private final int height;
+    private final int n;
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT, int sides) {
@@ -33,21 +33,21 @@ public class Shape extends JPanel {
         int x = width/2;
         int y = height/2;
 
-        //draws circle to check points are along the circle diamemter
+        //draws circle to check points are along the circle diameter
         g.setColor(Color.MAGENTA);
         g.drawOval(x-radius, y-radius, 2*radius, 2*radius);
 
        // point at center of circle
         g.fillOval(x, y, 2,2);
 
-        //gathers coordinates for polygon
-        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        //Gather coordinates for polygon
+        ArrayList<Coordinate> coordinates = new ArrayList<>();
         //back up list that matches the coordinate list
-        ArrayList<Coordinate> points = new ArrayList<Coordinate>();
+        ArrayList<Coordinate> points = new ArrayList<>();
         //collects the distances of the interior edges
         ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
 
-        ArrayList<Triangle> triangleslist = new ArrayList<>();
+        ArrayList<Triangle> triangleslist;
 
 
         int m = Math.min(x, y);
@@ -84,6 +84,13 @@ public class Shape extends JPanel {
         BruteForce bf =  new BruteForce(points);
         triangleslist = bf.startInteriorLineSearch();
 
+        ArrayList<Coordinate> ePointList = new ArrayList<>();
+        ExactMethod em = new ExactMethod();
+        em.startExact(points, points.size() - 1);
+        ePointList = em.getTempList();
+
+
+
 //        System.out.println(triangleslist);
 //        System.out.println(triangleslist.get(0));
 //        System.out.println(triangleslist.get(1));
@@ -97,11 +104,18 @@ public class Shape extends JPanel {
 //        System.out.println(distanceBetweenPoints.get(8));
 
         //drawLines(g, distanceBetweenPoints);
-        System.out.println("In shape : " + triangleslist);
+//        System.out.println("In shape : " + triangleslist);
         for (Triangle triangle : triangleslist) {
             g.setColor(Color.green);
             g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-            System.out.println(triangle.c.toString());
+//            System.out.println(triangle.c.toString());
+
+        }
+
+        for (CoordinateWithDistance point : distanceBetweenPoints) {
+            g.setColor(Color.orange);
+            g.drawLine(point.x, point.y, point.x2, point.y2);
+//            System.out.println(triangle.c.toString());
 
         }
 

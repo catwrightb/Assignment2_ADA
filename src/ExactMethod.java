@@ -1,0 +1,83 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+/*
+ * for how the solving for the dynamic exact method it would be best to visualise
+ * using the below image.
+ *
+ *  |  a      |b      |c      |d      |e      |f
+ * -|---------|-------|-------|-------|-------|------
+ * a|  0      |0      |abc    |abcd   |abcde  |abcdef
+ *  |---------|-------|-------|-------|-------|------
+ * b|  x      |0      |0      |bcd    |bcde   |bcdef
+ *  |---------|-------|-------|-------|-------|------
+ * c|  x      |x      |0      |0      |cde    |cdef
+ *  |---------|-------|-------|-------|-------|------
+ * d|  x      |x      |x      |0      |0      |def
+ *  |---------|-------|-------|-------|-------|------
+ * e|  x      |x      |x      |x      |0      |0
+ *  |---------|-------|-------|-------|-------|------
+ * f|  x      |x      |x      |x      |x      |0
+ *
+ * using the above method you will only be solving small problems to get the minimum
+ * cost tesselation. this should also reduce the complexity of the problem.
+ */
+
+public class ExactMethod {
+
+    //array list made to store accepted triangles
+    private final ArrayList<Coordinate> tempList = new ArrayList<>();
+
+    public ExactMethod() {
+    }
+
+    public ArrayList<Coordinate> getTempList() {
+        return tempList;
+    }
+
+    // helper method to find the distance between 2 points.
+    public double distance(int x, int y, int x2, int y2) {
+        return Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
+    }
+
+    //helper method to find the weight of a triangle.
+    public double weight(ArrayList<Coordinate> pointList, int i, int j, int k) {
+        Coordinate pointA = pointList.get(i);
+        Coordinate pointB = pointList.get(j);
+        Coordinate pointC = pointList.get(k);
+
+        return distance(pointA.x, pointA.y, pointB.x, pointB.y)
+                + distance(pointB.x, pointB.y, pointC.x, pointC.y)
+                + distance(pointC.x, pointC.y, pointA.x, pointA.y);
+    }
+
+    public double startExact(ArrayList<Coordinate> pointList, int n) {
+
+        //base case
+        if (n <= 3) {
+            return 0;
+        }
+        //this table will be to store the sub problem weights
+        double[][] costTable = new double[n][n];
+
+        for (int g = 0; g < n; g++) {
+
+            for (int i = 0, j = g; j < n; i++, j++) {
+
+                if (j < i + 2) {
+                    continue;
+                } else {
+                    costTable[i][j] = Double.MAX_VALUE;
+
+                    for (int k = i + 1; k < j; k++) {
+                        double x = (costTable[i][k] + costTable[k][j] + weight(pointList, i, j, k));
+                        if (x < costTable[i][j]) {
+                            costTable[i][j] = x;
+                        }
+
+                    }
+                }
+            }
+        }
+        return costTable[0][n - 1];
+    }
+}
