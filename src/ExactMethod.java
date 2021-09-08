@@ -27,6 +27,7 @@ public class ExactMethod {
     //array list made to store accepted triangles
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
     private Triangle t;
+    Triangle[][] cTable;
 
     public ExactMethod() {
     }
@@ -69,6 +70,10 @@ public class ExactMethod {
         return t;
     }
 
+    public Triangle[][] getcTable() {
+        return cTable;
+    }
+
     public double startExact(ArrayList<Coordinate> pointList, int n) {
 
 
@@ -79,7 +84,7 @@ public class ExactMethod {
 
         //this table will be to store the sub problem weights
         double[][] costTable = new double[n][n];
-        Triangle[][] cTable = new Triangle[n][n];
+        cTable = new Triangle[n][n];
 
         for (int g = 0; g < n; g++) {
 

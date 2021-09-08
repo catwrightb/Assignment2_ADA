@@ -84,12 +84,32 @@ public class Shape extends JPanel {
         BruteForce bf =  new BruteForce(points);
         triangleslist = bf.startInteriorLineSearch();
 
-        ArrayList<Coordinate> ePointList = new ArrayList<>();
+        FindInteriorLines find = new FindInteriorLines(points);
+        distanceBetweenPoints = find.startInteriorLineSearch();
+
+        ArrayList<CoordinateWithDistance> gPointList = new ArrayList<>();
+        Greedy gm = new Greedy(distanceBetweenPoints);
+        distanceBetweenPoints = gm.startGreedy();
+
+
+
+        Triangle[][] ePointList = new Triangle[points.size() - 1][points.size() - 1];
         ExactMethod em = new ExactMethod();
         em.startExact(points, points.size() - 1);
-        ePointList = em.getTempList();
+        ePointList = em.getcTable();
 
-
+        //this is suppposed to draw the exact method but im just confused now hahhaa
+//        for(Triangle[] row : ePointList){
+//
+//            for(Triangle t : row){
+//                if(t != null) {
+//                    g.setColor(Color.cyan);
+//                    g.drawLine(t.a.x,t.a.y,t.a.x2,t.a.y2);
+//                    g.drawLine(t.b.x,t.b.y,t.b.x2,t.b.y2);
+//                    g.drawLine(t.c.x,t.c.y,t.c.x2,t.c.y2);
+//                }
+//            }
+//        }
 
 //        System.out.println(triangleslist);
 //        System.out.println(triangleslist.get(0));
@@ -112,11 +132,10 @@ public class Shape extends JPanel {
 
         }
 
+        //this draws the greedy method
         for (CoordinateWithDistance point : distanceBetweenPoints) {
             g.setColor(Color.orange);
             g.drawLine(point.x, point.y, point.x2, point.y2);
-//            System.out.println(triangle.c.toString());
-
         }
 
 
