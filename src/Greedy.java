@@ -45,7 +45,7 @@ public class Greedy {
             lineList.remove(temp);
         }
 
-        System.out.println(greedyLines);
+//        System.out.println(greedyLines);
         return greedyLines;
     }
 }

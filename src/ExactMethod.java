@@ -28,7 +28,7 @@ public class ExactMethod {
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
     private Triangle t;
     Triangle[][] cTable;
-    private int n;
+    private int num;
 
     public ExactMethod() {
     }
@@ -76,8 +76,8 @@ public class ExactMethod {
     }
 
     public int startExact(ArrayList<Coordinate> pointList, int n) {
-        System.out.println("are we getting here ?");
-        this.n = n;
+
+        this.num = n;
         //base case
         if (n <= 3) {
             return 0;
@@ -93,7 +93,7 @@ public class ExactMethod {
                 if (j < i + 2) {
                     continue;
                 } else {
-                    costTable[i][j].c = Integer.MAX_VALUE;
+                    costTable[i][j].c = 10000000;
 
                     for (int k = i + 1; k < j; k++) {
                         int x = (costTable[i][k].c + costTable[k][j].c + weight(pointList, i, j, k));
@@ -106,16 +106,17 @@ public class ExactMethod {
                 }
             }
         }
-
+        System.out.println("are we getting here ?");
         drawTriangle(costTable,1,n);
         return costTable[0][n - 1].c;
     }
 
     public void drawTriangle(Pair[][] t, int i, int j){
         if(i != j){
-            System.out.println((i-1%n+1) + (t[i][j].k) + j);
+            System.out.println("hello");
+            System.out.println((i-1%num+1) + (t[i][j].k) + j);
             drawTriangle(t,i,t[i][j].k);
-            drawTriangle(t,(t[i][j].k+1%n+1),j);
+            drawTriangle(t,(t[i][j].k+1%num+1),j);
         }
     }
 

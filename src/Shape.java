@@ -1,5 +1,3 @@
-import javafx.scene.control.Alert;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,13 +8,12 @@ import java.util.Objects;
 import java.util.Random;
 
 
-
 public class Shape extends JPanel {
 
     private int width;
     private int height;
     private int n;
-    private String[] values = new String[] {"4", "5", "6", "7", "8", "9","10", "11", "12", "13", "14", "15"};
+    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
     int number = 0;
     boolean clicked = false;
 
@@ -26,12 +23,12 @@ public class Shape extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
         JPanel topPanel = new JPanel();
-        JComboBox<String> testCombo = new JComboBox<String>(values);
-        this.setSize(PANEL_WIDTH,PANEL_HEIGHT);
+        JComboBox<String> testCombo = new JComboBox<>(values);
+        this.setSize(PANEL_WIDTH, PANEL_HEIGHT);
 
         testCombo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                String numberOfSides =  Objects.requireNonNull(testCombo.getSelectedItem()).toString();
+                String numberOfSides = Objects.requireNonNull(testCombo.getSelectedItem()).toString();
 
                 number = Integer.parseInt(numberOfSides);
                 System.out.println(number);
@@ -43,12 +40,11 @@ public class Shape extends JPanel {
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                if (number != 0){
+                if (number != 0) {
                     clicked = true;
                     repaint();
-                }
-                else {
-                    JOptionPane.showMessageDialog(null,"Please select a number of sides option",
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a number of sides option",
                             "Number of sides is 0!", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -82,7 +78,7 @@ public class Shape extends JPanel {
 
 
     //paintComponent will paint 2 shapes fyi only one is seen though
-    // this is something we cant control
+    // this is something we can't control
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -97,21 +93,21 @@ public class Shape extends JPanel {
             int x = width / 2;
             int y = height / 2;
 
-            //draws circle to check points are along the circle diamemter
+            //draws circle to check points are along the circle diameter
             g.setColor(Color.MAGENTA);
             g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
 
             // point at center of circle
             g.fillOval(x, y, 2, 2);
 
-            //gathers coordinates for polygon
-            ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+            //Gather coordinates for polygon
+            ArrayList<Coordinate> coordinates = new ArrayList<>();
             //back up list that matches the coordinate list
-            ArrayList<Coordinate> points = new ArrayList<Coordinate>();
+            ArrayList<Coordinate> points = new ArrayList<>();
             //collects the distances of the interior edges
-            ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
+            ArrayList<CoordinateWithDistance> distanceBetweenPoints;
 
-            ArrayList<Triangle> triangleslist = new ArrayList<>();
+            ArrayList<Triangle> triangleslist;
 
 
             int m = Math.min(x, y);
@@ -142,8 +138,15 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
+
             ExactMethod exactMethod = new ExactMethod();
-            exactMethod.startExact(points, points.size() - 1);
+//            exactMethod.startExact(points, points.size() - 1);
+
+            FindInteriorLines findInteriorLines = new FindInteriorLines(points);
+            distanceBetweenPoints = findInteriorLines.startInteriorLineSearch();
+            Greedy greedy = new Greedy(distanceBetweenPoints);
+            Collections.sort(distanceBetweenPoints);
+            distanceBetweenPoints = greedy.startGreedy();
 
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
@@ -151,20 +154,27 @@ public class Shape extends JPanel {
             BruteForce bruteforce = new BruteForce(points);
             triangleslist = bruteforce.startInteriorLineSearch();
 
-            drawLines(g, triangleslist);
+            drawLines(g, triangleslist, distanceBetweenPoints);
 
 
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist){
+    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist, ArrayList<CoordinateWithDistance> cList) {
 
-        System.out.println("In shape : " + triangleslist);
+//        System.out.println("In shape : " + triangleslist);
+        //draws bruteforce lines
         for (Triangle triangle : triangleslist) {
             g.setColor(Color.blue);
             g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-            System.out.println(triangle.c.toString());
+//            System.out.println(triangle.c.toString());
 
+        }
+
+        //draws greedy lines
+        for (CoordinateWithDistance chord : cList) {
+            g.setColor(Color.GREEN);
+            g.drawLine(chord.x, chord.y, chord.x2, chord.y2);
         }
 
     }
