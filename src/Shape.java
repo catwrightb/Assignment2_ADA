@@ -142,6 +142,9 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
+            ExactMethod exactMethod = new ExactMethod();
+            exactMethod.startExact(points, points.size() - 1);
+
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
 
