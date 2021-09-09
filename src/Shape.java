@@ -27,7 +27,6 @@ public class Shape extends JPanel {
 
         JPanel topPanel = new JPanel();
         JComboBox<String> testCombo = new JComboBox<String>(values);
-        this.setSize(PANEL_WIDTH,PANEL_HEIGHT);
 
         testCombo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -40,6 +39,19 @@ public class Shape extends JPanel {
         });
 
         JButton submitButton = new JButton("Submit");
+
+
+        JPanel labelPanel = new JPanel();
+
+        JLabel bruteFinding = new JLabel("Brute : ");
+        JLabel greedyFinding = new JLabel("Greedy : ");
+        JLabel exactFinding = new JLabel("Exact : ");
+
+        labelPanel.add(bruteFinding);
+        labelPanel.add(greedyFinding);
+        labelPanel.add(exactFinding);
+        labelPanel.setBackground(Color.GREEN);
+
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -59,8 +71,11 @@ public class Shape extends JPanel {
         topPanel.add(testCombo);
         topPanel.add(submitButton);
 
+
         JPanel bottomPanel = new JPanel();
+        bottomPanel.setSize(30,20);
         JButton clearButton = new JButton("Clear");
+       // clearButton.setSize(30,20);
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,10 +84,13 @@ public class Shape extends JPanel {
                 repaint();
             }
         });
-        bottomPanel.add(clearButton, BorderLayout.CENTER);
+
+        //bottomPanel.add(clearButton, BorderLayout.NORTH);
+        bottomPanel.add(clearButton);
+
 
         add(topPanel, BorderLayout.NORTH);
-        //add(new Shape(PANEL_WIDTH, PANEL_HEIGHT, sides), BorderLayout.CENTER);
+
         add(bottomPanel, BorderLayout.SOUTH);
 
         width = PANEL_WIDTH;
