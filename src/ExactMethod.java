@@ -28,7 +28,7 @@ public class ExactMethod {
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
     private Triangle t;
     Triangle[][] cTable;
-    private int n;
+    private int num;
 
     public ExactMethod() {
     }
@@ -38,12 +38,12 @@ public class ExactMethod {
     }
 
     // helper method to find the distance between 2 points.
-    public int distance(int x, int y, int x2, int y2) {
+    public double distance(int x, int y, int x2, int y2) {
         return (int) Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
     }
 
     //helper method to find the weight of a triangle.
-    public int weight(ArrayList<Coordinate> pointList, int i, int j, int k) {
+    public double weight(ArrayList<Coordinate> pointList, int i, int j, int k) {
         Coordinate pointA = pointList.get(i);
         Coordinate pointB = pointList.get(j);
         Coordinate pointC = pointList.get(k);
@@ -75,57 +75,36 @@ public class ExactMethod {
         return cTable;
     }
 
-    public int startExact(ArrayList<Coordinate> pointList, int n) {
-        System.out.println("are we getting here ?");
-        this.n = n;
+    public double startExact(ArrayList<Coordinate> pointList, int n) {
+
+        this.num = n;
         //base case
         if (n <= 3) {
             return 0;
         }
         //this table will be to store the sub problem weights
-        Pair[][] costTable = new Pair[n][n];
+        double[][] costTable = new double[n][n];
         cTable = new Triangle[n][n];
 
         for (int g = 0; g < n; g++) {
-
             for (int i = 0, j = g; j < n; i++, j++) {
-
                 if (j < i + 2) {
-                    continue;
+                    costTable[i][j] = 0;
                 } else {
-                    costTable[i][j].c = Integer.MAX_VALUE;
+                    costTable[i][j] = 10000;
 
                     for (int k = i + 1; k < j; k++) {
-                        int x = (costTable[i][k].c + costTable[k][j].c + weight(pointList, i, j, k));
-                        if (x < costTable[i][j].c) {
-                            costTable[i][j].c = x;
-                            costTable[i][j].k = i;
+                        double x = (costTable[i][k] + costTable[k][j] + weight(pointList, i, j, k));
+                        if (x < costTable[i][j]) {
+                            costTable[i][j] = x;
                             cTable[i][j] = t;
                         }
                     }
                 }
             }
         }
-
-        drawTriangle(costTable,1,n);
-        return costTable[0][n - 1].c;
+        System.out.println(costTable[0][n - 1]);
+        return costTable[0][n - 1];
     }
 
-    public void drawTriangle(Pair[][] t, int i, int j){
-        if(i != j){
-            System.out.println((i-1%n+1) + (t[i][j].k) + j);
-            drawTriangle(t,i,t[i][j].k);
-            drawTriangle(t,(t[i][j].k+1%n+1),j);
-        }
-    }
-
-    private class Pair {
-        int c;
-        int k;
-
-        public Pair(int c, int k) {
-            this.c = c;
-            this.k = k;
-        }
-    }
 }
