@@ -10,13 +10,12 @@ import java.util.Objects;
 import java.util.Random;
 
 
-
 public class Shape extends JPanel {
 
     private int width;
     private int height;
     private int n;
-    private String[] values = new String[] {"4", "5", "6", "7", "8", "9","10", "11", "12", "13", "14", "15"};
+    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
     int number = 0;
     boolean clicked = false;
 
@@ -30,7 +29,7 @@ public class Shape extends JPanel {
 
         testCombo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                String numberOfSides =  Objects.requireNonNull(testCombo.getSelectedItem()).toString();
+                String numberOfSides = Objects.requireNonNull(testCombo.getSelectedItem()).toString();
 
                 number = Integer.parseInt(numberOfSides);
                 System.out.println(number);
@@ -55,12 +54,11 @@ public class Shape extends JPanel {
 
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                if (number != 0){
+                if (number != 0) {
                     clicked = true;
                     repaint();
-                }
-                else {
-                    JOptionPane.showMessageDialog(null,"Please select a number of sides option",
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a number of sides option",
                             "Number of sides is 0!", JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -73,9 +71,9 @@ public class Shape extends JPanel {
 
 
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setSize(30,20);
+        bottomPanel.setSize(30, 20);
         JButton clearButton = new JButton("Clear");
-       // clearButton.setSize(30,20);
+        // clearButton.setSize(30,20);
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,8 +157,10 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
+            ArrayList<Triangle> tList = new ArrayList<>();
             ExactMethod exactMethod = new ExactMethod();
-            exactMethod.startExact(points, points.size() - 1);
+            exactMethod.startExact(points, points.size());
+            tList = exactMethod.getcTable();
 
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
@@ -168,19 +168,27 @@ public class Shape extends JPanel {
             BruteForce bruteforce = new BruteForce(points);
             triangleslist = bruteforce.startInteriorLineSearch();
 
-            drawLines(g, triangleslist);
+            drawLines(g, triangleslist, tList);
 
 
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist){
+    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist, ArrayList<Triangle> tList) {
 
         System.out.println("In shape : " + triangleslist);
         for (Triangle triangle : triangleslist) {
             g.setColor(Color.blue);
             g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
             System.out.println(triangle.c.toString());
+
+        }
+        for (Triangle t : tList) {
+            g.setColor(Color.GREEN);
+            g.drawLine(t.a.x, t.a.y, t.a.x2, t.a.y2);
+            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
+            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
+//            System.out.println(t.c.toString());
 
         }
 

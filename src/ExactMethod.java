@@ -27,7 +27,7 @@ public class ExactMethod {
     //array list made to store accepted triangles
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
     private Triangle t;
-    Triangle[][] cTable;
+    ArrayList<Triangle> triangleTable;
     private int num;
 
     public ExactMethod() {
@@ -39,7 +39,7 @@ public class ExactMethod {
 
     // helper method to find the distance between 2 points.
     public double distance(int x, int y, int x2, int y2) {
-        return (int) Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
+        return (int)Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
     }
 
     //helper method to find the weight of a triangle.
@@ -71,8 +71,8 @@ public class ExactMethod {
         return t;
     }
 
-    public Triangle[][] getcTable() {
-        return cTable;
+    public ArrayList<Triangle> getcTable() {
+        return triangleTable;
     }
 
     public double startExact(ArrayList<Coordinate> pointList, int n) {
@@ -84,26 +84,31 @@ public class ExactMethod {
         }
         //this table will be to store the sub problem weights
         double[][] costTable = new double[n][n];
-        cTable = new Triangle[n][n];
+        triangleTable = new ArrayList<>();
 
         for (int g = 0; g < n; g++) {
             for (int i = 0, j = g; j < n; i++, j++) {
                 if (j < i + 2) {
                     costTable[i][j] = 0;
                 } else {
-                    costTable[i][j] = 10000;
-
+                    costTable[i][j] = 1000000000;
                     for (int k = i + 1; k < j; k++) {
                         double x = (costTable[i][k] + costTable[k][j] + weight(pointList, i, j, k));
                         if (x < costTable[i][j]) {
                             costTable[i][j] = x;
-                            cTable[i][j] = t;
+                            triangleTable.add(t);
                         }
                     }
                 }
             }
         }
-        System.out.println(costTable[0][n - 1]);
+        for(double[] r : costTable){
+            System.out.println("");
+            for(double d : r){
+                System.out.print(d + ", ");
+            }
+        }
+        System.out.println("");
         return costTable[0][n - 1];
     }
 
