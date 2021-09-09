@@ -1,4 +1,9 @@
+import com.sun.javafx.geom.Line2D;
+
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
 
 /*
@@ -18,9 +23,12 @@ public class BruteForce {
     static int j;
     static int f;
     static ArrayList< ArrayList<Triangle>> testList = new ArrayList<>();
+    static ArrayList<Triangle> allTriangleList = new ArrayList<>();
     double d = 0.0;
     int smallest = 0;
     double t = 0;
+    ArrayList<CoordinateWithDistance> list = new ArrayList<>();
+    Stack<Triangle> stack = new Stack<>();
 
 
     public BruteForce(ArrayList<Coordinate> points) {
@@ -33,10 +41,13 @@ public class BruteForce {
     }
 
 
-    public ArrayList<Triangle> startInteriorLineSearch() {
+    public ArrayList<CoordinateWithDistance> startInteriorLineSearch() {
         //need to clear the list otherwise old points will remain in memory
         triangles.clear();
         testList.clear();
+        list.clear();
+        stack.clear();
+        allTriangleList.clear();
 
         f = n;
 
@@ -49,36 +60,95 @@ public class BruteForce {
             testList.add(triangles);
         }
 
-        if (f % 2 == 0){
-            for (int i = 0; i < 1; i++) {
-                triangles = new ArrayList<>();
-                j = i;
-                n = f;
-                changeCoordinateMethodSideways(iterations);
-                testList.add(triangles);
+//        if (f % 2 == 0){
+//            for (int i = 0; i < 1; i++) {
+//                triangles = new ArrayList<>();
+//                j = i;
+//                n = f;
+//                changeCoordinateMethodSideways(iterations);
+//                testList.add(triangles);
+//
+//            }
+//        }
+
+//        for (int i = 0; i < testList.size(); i++) {
+//
+//            for (int k = 0; k < n-2; k++) {
+//                d += testList.get(i).get(k).hypothenus;
+//            }
+//
+//            d /= f-3;
+//
+//            if (i == 0){
+//                t = d;
+//            }
+//            else if (d < t){
+//                smallest = i;
+//            }
+//
+//            d = 0.0;
+//        }
+
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println(allTriangleList);
+        System.out.println("----------------------------------------------------------------------");
+        Collections.sort(allTriangleList);
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println(allTriangleList);
+        System.out.println("----------------------------------------------------------------------");
+
+
+
+
+
+        for (int i = 0; i < allTriangleList.size(); i++) {
+
+            if (list.isEmpty()){ //adds first smallest triangle
+                list.add(allTriangleList.get(i).c);
+            }
+            else {
+                CoordinateWithDistance c = allTriangleList.get(i).c;
+
+
+                for (int k = 0; k < list.size(); k++) {
+                    CoordinateWithDistance o = list.get(k);
+
+                    if (!list.contains(c)){
+                        if (!Line2D.linesIntersect(c.x-1,c.y-1,c.x2-1,c.y2-1,o.x,o.y,o.x2,o.y2)){
+                            stack.add(allTriangleList.get(i));
+                        }
+                        else {
+                            if (!stack.isEmpty()){
+                                System.out.println("cleared stack");
+                                stack.clear();
+                            }
+                        }
+                    }
+
+                }
+
+                if (!stack.isEmpty()){
+                    list.add(stack.get(0).c);
+                    stack.clear();
+                }
+                stack.clear();
 
             }
+
+            if (list.size() == f-3){
+                System.out.println("break");
+                break;
+            }
+
         }
 
-        for (int i = 0; i < testList.size(); i++) {
 
-            for (int k = 0; k < n-2; k++) {
-                d += testList.get(i).get(k).hypothenus;
-            }
+        System.out.println("List: "+list);
 
-            d /= f-3;
+        return list;
 
-            if (i == 0){
-                t = d;
-            }
-            else if (d < t){
-                smallest = i;
-            }
-
-            d = 0.0;
-        }
-        //System.out.println("Smallest = "+smallest);
-        return testList.get(smallest);
+        //System.out.println("Smallest = "+ smallest);
+        //return testList.get(smallest);
 
 
     }
@@ -160,6 +230,7 @@ public class BruteForce {
         if (!triangles.contains(triangle)) {
             triangles.add(triangle);
             pointsTest.add(cSide);
+            allTriangleList.add(triangle);
 
         }
 

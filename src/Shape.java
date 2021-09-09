@@ -1,3 +1,4 @@
+import com.sun.javafx.geom.Line2D;
 import javafx.scene.control.Alert;
 
 import javax.swing.*;
@@ -126,7 +127,7 @@ public class Shape extends JPanel {
             //collects the distances of the interior edges
             ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
 
-            ArrayList<Triangle> triangleslist = new ArrayList<>();
+            ArrayList<CoordinateWithDistance> triangleslist = new ArrayList<>();
 
 
             int m = Math.min(x, y);
@@ -171,26 +172,43 @@ public class Shape extends JPanel {
             drawLines(g, triangleslist, tList);
 
 
+            System.out.println("Test");
+            CoordinateWithDistance c1 = new CoordinateWithDistance(100, 100, 200, 200, 100);
+            CoordinateWithDistance c2 = new CoordinateWithDistance(100, 200, 200, 200, 100);
+
+            if (Line2D.linesIntersect(c1.x-1,c1.y-1,c1.x2-1,c1.y2-1,c2.x,c2.y,c2.x2,c2.y2) ){
+                System.out.println("intersect");
+            }
+            else {
+                System.out.println("dont intersect");
+            }
+
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist, ArrayList<Triangle> tList) {
+    public static void drawLines(Graphics g, ArrayList<CoordinateWithDistance> triangleslist, ArrayList<Triangle> tList) {
 
         System.out.println("In shape : " + triangleslist);
-        for (Triangle triangle : triangleslist) {
+        for (int i = 0; i < triangleslist.size(); i++) {
             g.setColor(Color.blue);
-            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-            System.out.println(triangle.c.toString());
-
+            g.drawLine(triangleslist.get(i).x, triangleslist.get(i).y, triangleslist.get(i).x2, triangleslist.get(i).y2);
+            System.out.println(triangleslist.get(i).toString());
         }
-        for (Triangle t : tList) {
-            g.setColor(Color.GREEN);
-            g.drawLine(t.a.x, t.a.y, t.a.x2, t.a.y2);
-            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
-            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
-//            System.out.println(t.c.toString());
-
-        }
+//        for (Triangle triangle : triangleslist) {
+//            g.setColor(Color.blue);
+//            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
+//            System.out.println(triangle.c.toString());
+//
+//        }
+//        for (int i = 0; i < tList.size(); i++) {
+//            Triangle t = tList.get(i);
+//            g.setColor(Color.GREEN);
+//            g.drawLine(t.a.x, t.a.y, t.a.x2, t.a.y2);
+//            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
+//            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
+////            System.out.println(t.c.toString());
+//
+//        }
 
     }
 
