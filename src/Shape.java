@@ -110,7 +110,6 @@ public class Shape extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         if (clicked) {
-
             int radius = 150;
             int x = width / 2;
             int y = height / 2;
