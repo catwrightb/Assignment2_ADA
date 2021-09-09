@@ -140,7 +140,7 @@ public class Shape extends JPanel {
 
 
             ExactMethod exactMethod = new ExactMethod();
-//            exactMethod.startExact(points, points.size() - 1);
+            exactMethod.startExact(points, points.size());
 
             FindInteriorLines findInteriorLines = new FindInteriorLines(points);
             distanceBetweenPoints = findInteriorLines.startInteriorLineSearch();
