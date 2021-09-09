@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 
+
+/*
+* Brute force is exactly what it sounds like, it is finding all possible tessellations per point
+* Because the algorithm doesn't care about preventing repeats and avoiding already done work
+* it often repeats itself and is not very efficient for large n sided polygons. Recursion is used in this approach.
+* */
+
 public class BruteForce {
     protected static ArrayList<Coordinate> points;
     protected static ArrayList<Coordinate> pointsTest;
@@ -98,7 +105,6 @@ public class BruteForce {
             n--;
             j++;
             if (j==f){
-//                System.out.println("Reset J");
                 j=0;
             }
             changeCoordinateMethod(i + 1);
@@ -109,7 +115,7 @@ public class BruteForce {
 
 
 
-    //this method rotates through the coordinates and calls to the angleChecker method
+    //this method is used for checking side triangle creation
     public static void changeCoordinateMethodSideways(int i) {
 
         if ((i != f-3)) { //3
