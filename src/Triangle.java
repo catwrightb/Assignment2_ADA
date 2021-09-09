@@ -5,7 +5,6 @@ class Triangle implements Comparable<Triangle>{
     CoordinateWithDistance b;
     CoordinateWithDistance c;
     double hypothenus;
-    int exteriorSides;
 
     public Triangle(CoordinateWithDistance a, CoordinateWithDistance b, CoordinateWithDistance c, double v) {
         this.a = a;

@@ -1,6 +1,5 @@
 import com.sun.javafx.geom.Line2D;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
@@ -14,203 +13,127 @@ import java.util.Stack;
 
 public class BruteForce {
     protected static ArrayList<Coordinate> points;
-    protected static ArrayList<Coordinate> pointsTest;
-    static ArrayList<Triangle> triangles;
     protected static int n;
     protected static int iterations;
-    static int pointsPerPoint;
     static int secondToLast;
-    static int j;
-    static int f;
-    static ArrayList< ArrayList<Triangle>> testList = new ArrayList<>();
+    static int recursionCurrentPoint;
+    static int copyN;
     static ArrayList<Triangle> allTriangleList = new ArrayList<>();
-    double d = 0.0;
-    int smallest = 0;
-    double t = 0;
     ArrayList<CoordinateWithDistance> list = new ArrayList<>();
-    Stack<Triangle> stack = new Stack<>();
+
 
 
     public BruteForce(ArrayList<Coordinate> points) {
-        this.points = points;
-        this.pointsTest = points;
-        this.n = points.size();
-        this.iterations = 0;
-        this.pointsPerPoint = points.size() - 3;
-        triangles = new ArrayList<>();
+        BruteForce.points = points;
+        n = points.size();
+        iterations = 0;
     }
 
 
     public ArrayList<CoordinateWithDistance> startInteriorLineSearch() {
         //need to clear the list otherwise old points will remain in memory
-        triangles.clear();
-        testList.clear();
         list.clear();
-        stack.clear();
         allTriangleList.clear();
 
-        f = n;
+        copyN = n;
 
-        for (int i = 0; i < f-2; i++) {
-            triangles = new ArrayList<>();
-            secondToLast = (i - 2 + f) % f;
-            j = i;
-            n = f;
+        //for loop will rotate around the points of the polygon
+        for (int i = 0; i < copyN; i++) {
+            secondToLast = (i - 2 + copyN) % copyN;
+            recursionCurrentPoint = i;
+            n = copyN;
             changeCoordinateMethod(iterations);
-            testList.add(triangles);
         }
 
-//        if (f % 2 == 0){
-//            for (int i = 0; i < 1; i++) {
-//                triangles = new ArrayList<>();
-//                j = i;
-//                n = f;
-//                changeCoordinateMethodSideways(iterations);
-//                testList.add(triangles);
-//
-//            }
-//        }
-
-//        for (int i = 0; i < testList.size(); i++) {
-//
-//            for (int k = 0; k < n-2; k++) {
-//                d += testList.get(i).get(k).hypothenus;
-//            }
-//
-//            d /= f-3;
-//
-//            if (i == 0){
-//                t = d;
-//            }
-//            else if (d < t){
-//                smallest = i;
-//            }
-//
-//            d = 0.0;
-//        }
-
-        System.out.println("----------------------------------------------------------------------");
-        System.out.println(allTriangleList);
-        System.out.println("----------------------------------------------------------------------");
+        //sort the found edges from least to greatest distance
         Collections.sort(allTriangleList);
-        System.out.println("----------------------------------------------------------------------");
-        System.out.println(allTriangleList);
-        System.out.println("----------------------------------------------------------------------");
 
-
-
-
-
+        //loop through the list
         for (int i = 0; i < allTriangleList.size(); i++) {
+            boolean inter = false;
 
-            if (list.isEmpty()){ //adds first smallest triangle
+            //adds first smallest triangle
+            if (list.isEmpty()){
                 list.add(allTriangleList.get(i).c);
             }
             else {
-                CoordinateWithDistance c = allTriangleList.get(i).c;
+                CoordinateWithDistance c3 = allTriangleList.get(i).c; //get index at i position
 
+                //then compare index at i with coordinates in the list
+                for (int j = 0; j < list.size(); j++) {
+                    CoordinateWithDistance temp = list.get(j);
 
-                for (int k = 0; k < list.size(); k++) {
-                    CoordinateWithDistance o = list.get(k);
-
-                    if (!list.contains(c)){
-                        if (!Line2D.linesIntersect(c.x-1,c.y-1,c.x2-1,c.y2-1,o.x,o.y,o.x2,o.y2)){
-                            stack.add(allTriangleList.get(i));
-                        }
-                        else {
-                            if (!stack.isEmpty()){
-                                System.out.println("cleared stack");
-                                stack.clear();
-                            }
-                        }
+                    //if the coordinates are the same
+                    if ((temp.x == c3.x && temp.y == c3.y && temp.x2 == c3.x2 && temp.y2 == c3.y2) ||
+                            (temp.x == c3.x2 && temp.y == c3.y2 && temp.x2 == c3.x && temp.y2 == c3.y) ||
+                            (temp.distance == c3.distance)){
+                        inter = true;
                     }
-
+                    else { //if coordinate are different
+                        //this if statement doesnt always work and i have no idea why
+                        // i have checked the lineintersect method and it works but cases still get through
+                        // the coordiantes are off by one in order to avoid cases where the points are the same like (50, 100) and (50,100)
+                        inter = Line2D.linesIntersect(c3.x + 1, c3.y + 1, c3.x2 + 1, c3.y2 + 1, temp.x, temp.y, temp.x2, temp.y2);
+                    }
                 }
 
-                if (!stack.isEmpty()){
-                    list.add(stack.get(0).c);
-                    stack.clear();
+                if (!inter){
+                    list.add(c3);
                 }
-                stack.clear();
-
-            }
-
-            if (list.size() == f-3){
-                System.out.println("break");
-                break;
             }
 
         }
 
+        //back up check if brute force cant find the correct number of interior edges
+        if (list.size() != copyN -3){
+            list.clear();
+            CoordinateWithDistance c = allTriangleList.get(0).c;
+            list.add(c);
 
-        System.out.println("List: "+list);
+            for (int i = 0; i < allTriangleList.size(); i++) {
+                CoordinateWithDistance c1 = allTriangleList.get(i).c;
+
+                if (c.x == c1.x && c.y == c1.y){
+                    if ((c.distance != c1.distance)){
+                        list.add(c1);
+                    }
+                }
+            }
+        }
+
+//        System.out.println("List: "+list);
 
         return list;
-
-        //System.out.println("Smallest = "+ smallest);
-        //return testList.get(smallest);
-
-
     }
 
 
 
-    //this method rotates through the coordinates and calls to the angleChecker method
+    //this method recursively finds all triangles possible from one point of the polygon
     public static void changeCoordinateMethod(int i) {
-        Boolean intersect = false;
 
-        if (i != f-3 ) { //3
-            int last = (j - 1 + n) % n; //last point
-            double x1 = points.get(j).x;
-            double y1 = points.get(j).y;
+        if (i != copyN-3 ) {
+            int last = (recursionCurrentPoint - 1 + n) % n; //last point
+            double x1 = points.get(recursionCurrentPoint).x;
+            double y1 = points.get(recursionCurrentPoint).y;
             double x2 = points.get(secondToLast).x;
             double y2 = points.get(secondToLast).y;
             double x3 = points.get(last).x;
             double y3 = points.get(last).y;
 
-            if (!intersect){
-                polygonAngleCheck(x1, y1, x2, y2, x3, y3);
-            }
+
+            polygonAngleCheck(x1, y1, x2, y2, x3, y3);
+
 
             n--;
-            j++;
-            if (j==f){
-                j=0;
+            recursionCurrentPoint++;
+            if (recursionCurrentPoint == copyN){
+                recursionCurrentPoint = 0;
             }
             changeCoordinateMethod(i + 1);
 
         }
     }
 
-
-
-
-    //this method is used for checking side triangle creation
-    public static void changeCoordinateMethodSideways(int i) {
-
-        if ((i != f-3)) { //3
-
-            int last = (j - 1 + n) % n; //last point
-            int second = (j - 2 + n) % n; //second to last point
-            double x1 = points.get(j).x;
-            double y1 = points.get(j).y;
-            double x2 = points.get(second).x;
-            double y2 = points.get(second).y;
-            double x3 = points.get(last).x;
-            double y3 = points.get(last).y;
-
-            polygonAngleCheck(x1, y1, x2, y2, x3, y3);
-
-            n--;
-            j+=2;
-
-            if (j >= f){
-                j=0;
-            }
-            changeCoordinateMethodSideways(i + 1);
-
-        }
-    }
 
     public static void polygonAngleCheck ( double x_1, double y_1, double x_2, double y_2, double x_3,
                                              double y_3){
@@ -226,13 +149,7 @@ public class BruteForce {
 
         Triangle triangle = new Triangle(aSide, bSide, cSide, c);
 
-
-        if (!triangles.contains(triangle)) {
-            triangles.add(triangle);
-            pointsTest.add(cSide);
-            allTriangleList.add(triangle);
-
-        }
+        allTriangleList.add(triangle);
 
     }
 

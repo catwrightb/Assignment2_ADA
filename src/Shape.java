@@ -16,7 +16,7 @@ public class Shape extends JPanel {
     private int width;
     private int height;
     private int n;
-    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "13", "16", "18", "20"};
     int number = 0;
     boolean clicked = false;
 
@@ -42,6 +42,8 @@ public class Shape extends JPanel {
 
 
         JPanel labelPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(labelPanel,BoxLayout.PAGE_AXIS );
+        labelPanel.setLayout(boxLayout);
 
         JLabel bruteFinding = new JLabel("Brute : ");
         JLabel greedyFinding = new JLabel("Greedy : ");
@@ -63,7 +65,6 @@ public class Shape extends JPanel {
                             "Number of sides is 0!", JOptionPane.ERROR_MESSAGE);
                 }
 
-                //System.out.println("test");
             }
         });
 
@@ -89,7 +90,7 @@ public class Shape extends JPanel {
 
 
         add(topPanel, BorderLayout.NORTH);
-
+        add(labelPanel, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
 
         width = PANEL_WIDTH;
@@ -158,30 +159,28 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
+
+
+            g2d.setColor(Color.RED);
+            g2d.drawPolygon(polygon);
+
+            //Brute Force
+            BruteForce bruteforce = new BruteForce(points);
+            triangleslist = bruteforce.startInteriorLineSearch();
+
+            //Greedy
+            FindInteriorLines fi = new FindInteriorLines(points);
+            distanceBetweenPoints = fi.startInteriorLineSearch();
+            Greedy greedy = new Greedy(distanceBetweenPoints);
+            ArrayList<CoordinateWithDistance>  greedyCoordinates = greedy.startGreedy();
+
+            //Exact
             ArrayList<Triangle> tList = new ArrayList<>();
             ExactMethod exactMethod = new ExactMethod();
             exactMethod.startExact(points, points.size());
             tList = exactMethod.getcTable();
 
-            g2d.setColor(Color.RED);
-            g2d.drawPolygon(polygon);
-
-            BruteForce bruteforce = new BruteForce(points);
-            triangleslist = bruteforce.startInteriorLineSearch();
-
             drawLines(g, triangleslist, tList);
-
-
-            System.out.println("Test");
-            CoordinateWithDistance c1 = new CoordinateWithDistance(100, 100, 200, 200, 100);
-            CoordinateWithDistance c2 = new CoordinateWithDistance(100, 200, 200, 200, 100);
-
-            if (Line2D.linesIntersect(c1.x-1,c1.y-1,c1.x2-1,c1.y2-1,c2.x,c2.y,c2.x2,c2.y2) ){
-                System.out.println("intersect");
-            }
-            else {
-                System.out.println("dont intersect");
-            }
 
         }
     }
@@ -207,7 +206,6 @@ public class Shape extends JPanel {
 //            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
 //            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
 ////            System.out.println(t.c.toString());
-//
 //        }
 
     }
