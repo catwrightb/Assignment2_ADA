@@ -17,9 +17,9 @@ public class Demo extends JFrame{
 
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Polygon Generator"); //create frame to hold our JPanel subclass
+        JFrame frame = new JFrame("Polygon Tessellate Generator With Different Approaches"); //create frame to hold our JPanel subclass
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(700,700) );
+        frame.setPreferredSize(new Dimension(800,700) );
         frame.getContentPane().add(new Shape(PANEL_WIDTH, PANEL_HEIGHT));  //add instance of MyGUI to the frame
         frame.pack(); //resize frame to fit our Jpanel
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

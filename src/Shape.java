@@ -22,6 +22,7 @@ public class Shape extends JPanel {
     static JLabel bruteFinding;
     static JLabel greedyFinding;
     static JLabel exactFinding;
+    static JLabel otherInfo;
     static String bruteString = "(Black Line) Brute : ";
     static String greedyString = "(Green Line) Greedy : ";
     static String exactString = "(Red Line) Exact : ";
@@ -30,6 +31,7 @@ public class Shape extends JPanel {
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT) {
         super(new BorderLayout());   //invoke super class Jpanel constructor use BorderLayout
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(Color.WHITE);
 
         JPanel topPanel = new JPanel();
         JComboBox<String> testCombo = new JComboBox<String>(values);
@@ -45,6 +47,8 @@ public class Shape extends JPanel {
         });
 
         JButton submitButton = new JButton("Submit");
+        otherInfo = new JLabel("P.S: Tesselation lines will appear over each other");
+
 
 
         JPanel labelPanel = new JPanel();
@@ -55,9 +59,11 @@ public class Shape extends JPanel {
         greedyFinding = new JLabel(greedyString);
         exactFinding = new JLabel(exactString);
 
+
         labelPanel.add(bruteFinding);
         labelPanel.add(greedyFinding);
         labelPanel.add(exactFinding);
+
 
 
         submitButton.addActionListener(new ActionListener() {
@@ -75,6 +81,7 @@ public class Shape extends JPanel {
 
         topPanel.add(testCombo);
         topPanel.add(submitButton);
+        topPanel.add(otherInfo);
 
 
         JPanel bottomPanel = new JPanel();
@@ -86,6 +93,12 @@ public class Shape extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 number = 0;
                 clicked = false;
+                bruteString = "(Black Line) Brute : ";
+                bruteFinding.setText(bruteString);
+                greedyString = "(Green Line) Greedy : ";
+                greedyFinding.setText(greedyString);
+                exactString = "(Red Line) Exact : ";
+                exactFinding.setText(exactString);
                 repaint();
             }
         });
@@ -165,8 +178,6 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
-
-            g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
 
 
@@ -195,8 +206,15 @@ public class Shape extends JPanel {
             //Exact
             ArrayList<Triangle> tList = new ArrayList<>();
             ExactMethod exactMethod = new ExactMethod();
-            exactMethod.startExact(points, points.size());
-            tList = exactMethod.getcTable();
+            Double d = exactMethod.startExact(points, points.size());
+            d /= n;
+            double roundOff = Math.round(d*100)/100;
+
+            String s3 = String.valueOf(roundOff);
+            String newString3 = exactString.concat(s3);
+            exactFinding.setText(newString3);
+            drawLines(g2d, triangleslist, Color.RED, 1);
+            //tList = exactMethod.getcTable();
 
 
         }
