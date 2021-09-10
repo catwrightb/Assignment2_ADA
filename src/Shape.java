@@ -21,10 +21,10 @@ public class Shape extends JPanel {
     boolean clicked = false;
     static JLabel bruteFinding;
     static JLabel greedyFinding;
-   static JLabel exactFinding;
-    static String bruteString = "Brute : ";
-   static String greedyString = "Greedy : ";
-  static   String exactString = "Exact : ";
+    static JLabel exactFinding;
+    static String bruteString = "(Black Line) Brute : ";
+    static String greedyString = "(Green Line) Greedy : ";
+    static String exactString = "(Red Line) Exact : ";
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT) {
@@ -58,7 +58,6 @@ public class Shape extends JPanel {
         labelPanel.add(bruteFinding);
         labelPanel.add(greedyFinding);
         labelPanel.add(exactFinding);
-        labelPanel.setBackground(Color.GREEN);
 
 
         submitButton.addActionListener(new ActionListener() {
@@ -121,11 +120,11 @@ public class Shape extends JPanel {
             int y = height / 2;
 
             //draws circle to check points are along the circle diamemter
-            g.setColor(Color.MAGENTA);
-            g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
-
-            // point at center of circle
-            g.fillOval(x, y, 2, 2);
+//            g.setColor(Color.MAGENTA);
+//            g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
+//
+//            // point at center of circle
+//            g.fillOval(x, y, 2, 2);
 
             //gathers coordinates for polygon
             ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
@@ -149,7 +148,7 @@ public class Shape extends JPanel {
                 double t = random.nextDouble() * Math.PI * 2;
                 int a = (int) Math.round(x + radius * Math.cos(t));
                 int b = (int) Math.round(y + radius * Math.sin(t));
-                g.setColor(Color.RED);
+                g.setColor(Color.MAGENTA);
 
                 g.fillOval(a - r2, b - r2, 2 * r2, 2 * r2);
                 coordinates.add(new Coordinate(a, b));
@@ -191,7 +190,7 @@ public class Shape extends JPanel {
             String newString2 = greedyString.concat(s2);
             greedyFinding.setText(newString2);
 
-            drawLines(g2d, triangleslist, Color.GREEN, 3);
+            drawLines(g2d, greedyCoordinates, Color.GREEN, 3);
 
             //Exact
             ArrayList<Triangle> tList = new ArrayList<>();
@@ -258,51 +257,4 @@ public class Shape extends JPanel {
         });
     }
 
-    public JLabel getBruteFinding() {
-        return bruteFinding;
-    }
-
-    public void setBruteFinding(JLabel bruteFinding) {
-        this.bruteFinding = bruteFinding;
-    }
-
-    public JLabel getGreedyFinding() {
-        return greedyFinding;
-    }
-
-    public void setGreedyFinding(JLabel greedyFinding) {
-        this.greedyFinding = greedyFinding;
-    }
-
-    public JLabel getExactFinding() {
-        return exactFinding;
-    }
-
-    public void setExactFinding(JLabel exactFinding) {
-        this.exactFinding = exactFinding;
-    }
-
-    public String getBruteString() {
-        return bruteString;
-    }
-
-    public void setBruteString(String bruteString) {
-        this.bruteString = bruteString;
-    }
-
-    public String getGreedyString() {
-        return greedyString;
-    }
-
-    public void setGreedyString(String greedyString) {
-        this.greedyString = greedyString;
-    }
-
-    public String getExactString() {
-        return exactString;
-    }
-
-    public void setExactString(String exactString) {
-        this.exactString = exactString;
-    }
 }
