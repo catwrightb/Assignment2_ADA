@@ -1,3 +1,4 @@
+import com.sun.javafx.geom.Line2D;
 import javafx.scene.control.Alert;
 
 import javax.swing.*;
@@ -15,9 +16,15 @@ public class Shape extends JPanel {
     private int width;
     private int height;
     private int n;
-    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+    private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "13", "16", "18", "20"};
     int number = 0;
     boolean clicked = false;
+    static JLabel bruteFinding;
+    static JLabel greedyFinding;
+    static JLabel exactFinding;
+    static String bruteString = "(Black Line) Brute : ";
+    static String greedyString = "(Green Line) Greedy : ";
+    static String exactString = "(Red Line) Exact : ";
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT) {
@@ -41,15 +48,16 @@ public class Shape extends JPanel {
 
 
         JPanel labelPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(labelPanel,BoxLayout.PAGE_AXIS );
+        labelPanel.setLayout(boxLayout);
 
-        JLabel bruteFinding = new JLabel("Brute : ");
-        JLabel greedyFinding = new JLabel("Greedy : ");
-        JLabel exactFinding = new JLabel("Exact : ");
+        bruteFinding = new JLabel(bruteString);
+        greedyFinding = new JLabel(greedyString);
+        exactFinding = new JLabel(exactString);
 
         labelPanel.add(bruteFinding);
         labelPanel.add(greedyFinding);
         labelPanel.add(exactFinding);
-        labelPanel.setBackground(Color.GREEN);
 
 
         submitButton.addActionListener(new ActionListener() {
@@ -62,7 +70,6 @@ public class Shape extends JPanel {
                             "Number of sides is 0!", JOptionPane.ERROR_MESSAGE);
                 }
 
-                //System.out.println("test");
             }
         });
 
@@ -88,7 +95,7 @@ public class Shape extends JPanel {
 
 
         add(topPanel, BorderLayout.NORTH);
-
+        add(labelPanel, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
 
         width = PANEL_WIDTH;
@@ -108,16 +115,16 @@ public class Shape extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         if (clicked) {
-            int radius = 150;
+            int radius = 220;
             int x = width / 2;
             int y = height / 2;
 
             //draws circle to check points are along the circle diamemter
-            g.setColor(Color.MAGENTA);
-            g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
-
-            // point at center of circle
-            g.fillOval(x, y, 2, 2);
+//            g.setColor(Color.MAGENTA);
+//            g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
+//
+//            // point at center of circle
+//            g.fillOval(x, y, 2, 2);
 
             //gathers coordinates for polygon
             ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
@@ -126,7 +133,7 @@ public class Shape extends JPanel {
             //collects the distances of the interior edges
             ArrayList<CoordinateWithDistance> distanceBetweenPoints = new ArrayList<>();
 
-            ArrayList<Triangle> triangleslist = new ArrayList<>();
+            ArrayList<CoordinateWithDistance> triangleslist = new ArrayList<>();
 
 
             int m = Math.min(x, y);
@@ -141,7 +148,8 @@ public class Shape extends JPanel {
                 double t = random.nextDouble() * Math.PI * 2;
                 int a = (int) Math.round(x + radius * Math.cos(t));
                 int b = (int) Math.round(y + radius * Math.sin(t));
-                g.setColor(Color.BLACK);
+                g.setColor(Color.MAGENTA);
+
                 g.fillOval(a - r2, b - r2, 2 * r2, 2 * r2);
                 coordinates.add(new Coordinate(a, b));
                 points.add(new Coordinate(a, b));
@@ -157,34 +165,70 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
-            ExactMethod exactMethod = new ExactMethod();
-
-            //this is the cost you asked for :) feel free to have a look at the recurssion thing haha
-            double exactCost = exactMethod.startExact(points, points.size());
-
-            System.out.println(exactCost);
 
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
 
+
+            //Brute Force
             BruteForce bruteforce = new BruteForce(points);
             triangleslist = bruteforce.startInteriorLineSearch();
 
-            drawLines(g, triangleslist);
+            String s1 = sumDistances(triangleslist);
+            String newString1 = bruteString.concat(s1);
+            bruteFinding.setText(newString1);
+
+            drawLines(g2d, triangleslist, Color.BLACK, 5);
+
+            //Greedy
+            FindInteriorLines fi = new FindInteriorLines(points);
+            distanceBetweenPoints = fi.startInteriorLineSearch();
+            Greedy greedy = new Greedy(distanceBetweenPoints);
+            ArrayList<CoordinateWithDistance>  greedyCoordinates = greedy.startGreedy();
+
+            String s2 = sumDistances(greedyCoordinates);
+            String newString2 = greedyString.concat(s2);
+            greedyFinding.setText(newString2);
+
+            drawLines(g2d, greedyCoordinates, Color.GREEN, 3);
+
+            //Exact
+            ArrayList<Triangle> tList = new ArrayList<>();
+            ExactMethod exactMethod = new ExactMethod();
+            exactMethod.startExact(points, points.size());
+            tList = exactMethod.getcTable();
 
 
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist) {
 
-        System.out.println("In shape : " + triangleslist);
-        for (Triangle triangle : triangleslist) {
-            g.setColor(Color.blue);
-            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-            System.out.println(triangle.c.toString());
+
+
+    public static String sumDistances(ArrayList<CoordinateWithDistance> points){
+        double sum = 0;
+        for (int i = 0; i < points.size(); i++) {
+            CoordinateWithDistance coordinateWithDistance = points.get(i);
+            sum += coordinateWithDistance.distance;
+        }
+        sum /= points.size();
+
+        double roundOff = Math.round(sum*100)/100;
+
+        return String.valueOf(roundOff);
+
+    }
+
+
+    public static void drawLines(Graphics2D g2d, ArrayList<CoordinateWithDistance> interiorEdges, Color Black, int five) {
+
+        for (CoordinateWithDistance interiorEdge : interiorEdges) {
+            g2d.setColor(Black);
+            g2d.setStroke(new BasicStroke(five));
+            g2d.drawLine(interiorEdge.x, interiorEdge.y, interiorEdge.x2, interiorEdge.y2);
 
         }
+
     }
 
 
@@ -212,6 +256,5 @@ public class Shape extends JPanel {
             return (int) (a2 - a1);
         });
     }
-
 
 }

@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 
-class Triangle {
+class Triangle implements Comparable<Triangle>{
     CoordinateWithDistance a;
     CoordinateWithDistance b;
     CoordinateWithDistance c;
     double hypothenus;
-    int exteriorSides;
 
     public Triangle(CoordinateWithDistance a, CoordinateWithDistance b, CoordinateWithDistance c, double v) {
         this.a = a;
@@ -35,14 +34,17 @@ class Triangle {
                 "}";
     }
 
-    //    @Override
-//    public String toString() {
-//        return "Combo {" +
-//                " a = " + a +
-//                ", b = " + b +
-//                ", c = " + c +
-//
-//    }
+    @Override
+    public int compareTo(Triangle o) {
+        if (hypothenus > o.hypothenus){
+            return 1;
+        }
+        else if(hypothenus == o.hypothenus){
+            return 0;
+        }
+        return -1;
+    }
+
 //
     @Override
     public boolean equals (Object object) {
