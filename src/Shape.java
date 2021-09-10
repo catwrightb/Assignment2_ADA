@@ -19,6 +19,12 @@ public class Shape extends JPanel {
     private String[] values = new String[]{"4", "5", "6", "7", "8", "9", "10", "13", "16", "18", "20"};
     int number = 0;
     boolean clicked = false;
+    static JLabel bruteFinding;
+    static JLabel greedyFinding;
+   static JLabel exactFinding;
+    static String bruteString = "Brute : ";
+   static String greedyString = "Greedy : ";
+  static   String exactString = "Exact : ";
 
 
     public Shape(int PANEL_WIDTH, int PANEL_HEIGHT) {
@@ -45,9 +51,9 @@ public class Shape extends JPanel {
         BoxLayout boxLayout = new BoxLayout(labelPanel,BoxLayout.PAGE_AXIS );
         labelPanel.setLayout(boxLayout);
 
-        JLabel bruteFinding = new JLabel("Brute : ");
-        JLabel greedyFinding = new JLabel("Greedy : ");
-        JLabel exactFinding = new JLabel("Exact : ");
+        bruteFinding = new JLabel(bruteString);
+        greedyFinding = new JLabel(greedyString);
+        exactFinding = new JLabel(exactString);
 
         labelPanel.add(bruteFinding);
         labelPanel.add(greedyFinding);
@@ -110,7 +116,7 @@ public class Shape extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         if (clicked) {
-            int radius = 150;
+            int radius = 220;
             int x = width / 2;
             int y = height / 2;
 
@@ -143,7 +149,8 @@ public class Shape extends JPanel {
                 double t = random.nextDouble() * Math.PI * 2;
                 int a = (int) Math.round(x + radius * Math.cos(t));
                 int b = (int) Math.round(y + radius * Math.sin(t));
-                g.setColor(Color.BLACK);
+                g.setColor(Color.RED);
+
                 g.fillOval(a - r2, b - r2, 2 * r2, 2 * r2);
                 coordinates.add(new Coordinate(a, b));
                 points.add(new Coordinate(a, b));
@@ -160,13 +167,19 @@ public class Shape extends JPanel {
             }
 
 
-
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
+
 
             //Brute Force
             BruteForce bruteforce = new BruteForce(points);
             triangleslist = bruteforce.startInteriorLineSearch();
+
+            String s1 = sumDistances(triangleslist);
+            String newString1 = bruteString.concat(s1);
+            bruteFinding.setText(newString1);
+
+            drawLines(g2d, triangleslist, Color.BLACK, 5);
 
             //Greedy
             FindInteriorLines fi = new FindInteriorLines(points);
@@ -174,39 +187,48 @@ public class Shape extends JPanel {
             Greedy greedy = new Greedy(distanceBetweenPoints);
             ArrayList<CoordinateWithDistance>  greedyCoordinates = greedy.startGreedy();
 
+            String s2 = sumDistances(greedyCoordinates);
+            String newString2 = greedyString.concat(s2);
+            greedyFinding.setText(newString2);
+
+            drawLines(g2d, triangleslist, Color.GREEN, 3);
+
             //Exact
             ArrayList<Triangle> tList = new ArrayList<>();
             ExactMethod exactMethod = new ExactMethod();
             exactMethod.startExact(points, points.size());
             tList = exactMethod.getcTable();
 
-            drawLines(g, triangleslist, tList);
 
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<CoordinateWithDistance> triangleslist, ArrayList<Triangle> tList) {
 
-        System.out.println("In shape : " + triangleslist);
-        for (int i = 0; i < triangleslist.size(); i++) {
-            g.setColor(Color.blue);
-            g.drawLine(triangleslist.get(i).x, triangleslist.get(i).y, triangleslist.get(i).x2, triangleslist.get(i).y2);
-            System.out.println(triangleslist.get(i).toString());
+
+
+    public static String sumDistances(ArrayList<CoordinateWithDistance> points){
+        double sum = 0;
+        for (int i = 0; i < points.size(); i++) {
+            CoordinateWithDistance coordinateWithDistance = points.get(i);
+            sum += coordinateWithDistance.distance;
         }
-//        for (Triangle triangle : triangleslist) {
-//            g.setColor(Color.blue);
-//            g.drawLine(triangle.c.x, triangle.c.y, triangle.c.x2, triangle.c.y2);
-//            System.out.println(triangle.c.toString());
-//
-//        }
-//        for (int i = 0; i < tList.size(); i++) {
-//            Triangle t = tList.get(i);
-//            g.setColor(Color.GREEN);
-//            g.drawLine(t.a.x, t.a.y, t.a.x2, t.a.y2);
-//            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
-//            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
-////            System.out.println(t.c.toString());
-//        }
+        sum /= points.size();
+
+        double roundOff = Math.round(sum*100)/100;
+
+        return String.valueOf(roundOff);
+
+    }
+
+
+    public static void drawLines(Graphics2D g2d, ArrayList<CoordinateWithDistance> interiorEdges, Color Black, int five) {
+
+        for (CoordinateWithDistance interiorEdge : interiorEdges) {
+            g2d.setColor(Black);
+            g2d.setStroke(new BasicStroke(five));
+            g2d.drawLine(interiorEdge.x, interiorEdge.y, interiorEdge.x2, interiorEdge.y2);
+
+        }
 
     }
 
@@ -236,5 +258,51 @@ public class Shape extends JPanel {
         });
     }
 
+    public JLabel getBruteFinding() {
+        return bruteFinding;
+    }
 
+    public void setBruteFinding(JLabel bruteFinding) {
+        this.bruteFinding = bruteFinding;
+    }
+
+    public JLabel getGreedyFinding() {
+        return greedyFinding;
+    }
+
+    public void setGreedyFinding(JLabel greedyFinding) {
+        this.greedyFinding = greedyFinding;
+    }
+
+    public JLabel getExactFinding() {
+        return exactFinding;
+    }
+
+    public void setExactFinding(JLabel exactFinding) {
+        this.exactFinding = exactFinding;
+    }
+
+    public String getBruteString() {
+        return bruteString;
+    }
+
+    public void setBruteString(String bruteString) {
+        this.bruteString = bruteString;
+    }
+
+    public String getGreedyString() {
+        return greedyString;
+    }
+
+    public void setGreedyString(String greedyString) {
+        this.greedyString = greedyString;
+    }
+
+    public String getExactString() {
+        return exactString;
+    }
+
+    public void setExactString(String exactString) {
+        this.exactString = exactString;
+    }
 }
