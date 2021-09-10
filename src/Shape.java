@@ -161,7 +161,7 @@ public class Shape extends JPanel {
                 double t = random.nextDouble() * Math.PI * 2;
                 int a = (int) Math.round(x + radius * Math.cos(t));
                 int b = (int) Math.round(y + radius * Math.sin(t));
-                g.setColor(Color.MAGENTA);
+                g.setColor(Color.DARK_GRAY);
 
                 g.fillOval(a - r2, b - r2, 2 * r2, 2 * r2);
                 coordinates.add(new Coordinate(a, b));
