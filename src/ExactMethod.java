@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 /*
  * for how the solving for the dynamic exact method it would be best to visualise
  * using the below image.
@@ -26,9 +25,7 @@ public class ExactMethod {
 
     //array list made to store accepted triangles
     private final ArrayList<Coordinate> tempList = new ArrayList<>();
-    private Triangle t;
     ArrayList<Triangle> triangleTable;
-    private int num;
 
     public ExactMethod() {
     }
@@ -39,7 +36,7 @@ public class ExactMethod {
 
     // helper method to find the distance between 2 points.
     public double distance(int x, int y, int x2, int y2) {
-        return (int)Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
+        return (int) Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
     }
 
     //helper method to find the weight of a triangle.
@@ -48,68 +45,70 @@ public class ExactMethod {
         Coordinate pointB = pointList.get(j);
         Coordinate pointC = pointList.get(k);
 
-        makeTriangle(pointList, i, j, k);
-
-        return distance(pointA.x, pointA.y, pointB.x, pointB.y)
+        return (int) distance(pointA.x, pointA.y, pointB.x, pointB.y)
                 + distance(pointB.x, pointB.y, pointC.x, pointC.y)
                 + distance(pointC.x, pointC.y, pointA.x, pointA.y);
     }
 
-    public void makeTriangle(ArrayList<Coordinate> pointList, int i, int j, int k) {
-        Coordinate a = pointList.get(i);
-        Coordinate b = pointList.get(j);
-        Coordinate c = pointList.get(k);
-
-        CoordinateWithDistance lineA = new CoordinateWithDistance(a.x, a.y, b.x, b.y, 0);
-        CoordinateWithDistance lineB = new CoordinateWithDistance(b.x, b.y, c.x, c.y, 0);
-        CoordinateWithDistance lineC = new CoordinateWithDistance(c.x, c.y, a.x, a.y, 0);
-
-        t = new Triangle(lineA, lineB, lineC, 0);
-    }
-
-    public Triangle getT() {
-        return t;
-    }
-
-    public ArrayList<Triangle> getcTable() {
+    public ArrayList<Triangle> getTriTable() {
         return triangleTable;
     }
 
     public double startExact(ArrayList<Coordinate> pointList, int n) {
-
-        this.num = n;
-        //base case
-        if (n <= 3) {
-            return 0;
-        }
         //this table will be to store the sub problem weights
-        double[][] costTable = new double[n][n];
-        triangleTable = new ArrayList<>();
+        double[][] ctable = new double[n][n];
+        //this table is for storing the index needed
+        int[][] iTable = new int[n][n];
 
-        for (int g = 0; g < n; g++) {
-            for (int i = 0, j = g; j < n; i++, j++) {
+        for (int l = 0; l < n; l++) {
+            int j = l;
+            for (int i = 0; j < n; i++, j++) {
+                //adding a 0 to all points that are not above 3 sides so everything that isn't a triangle is 0
                 if (j < i + 2) {
-                    costTable[i][j] = 0;
+                    ctable[i][j] = 0;
                 } else {
-                    costTable[i][j] = 1000000000;
-                    for (int k = i + 1; k < j; k++) {
-                        double x = (costTable[i][k] + costTable[k][j] + weight(pointList, i, j, k));
-                        if (x < costTable[i][j]) {
-                            costTable[i][j] = x;
-                            triangleTable.add(t);
+                    /*making all the other points in the cost Table to be infinity or as many numbers as im allowed here
+                    * so that when checked in the below if statement only the triangles can be chosen as the other indexes
+                    * will always be smaller than x.
+                    */
+                    ctable[i][j] = 1000000000;
+                    for (int k = i + 1; k <= j - 1; k++) {
+                        // creates the cost x as the 2 previous sub-problem costs + the new sub-problem
+                        double x = ctable[i][k] + ctable[k][j] + weight(pointList, i, k, j);
+                        //checks of infinity is smaller that ctable[i][j]
+                        if (x < ctable[i][j]) {
+                            ctable[i][j] = x;
+                            iTable[i][j] = k;
                         }
                     }
                 }
             }
         }
-        for(double[] r : costTable){
-            System.out.println("");
-            for(double d : r){
+//        drawTriangle(iTable, 0, n - 1, n);
+
+        //prints out the index table was just for testing
+        for (int[] r : iTable) {
+            System.out.println(".");
+            for (int d : r) {
                 System.out.print(d + ", ");
             }
         }
-        System.out.println("");
-        return costTable[0][n - 1];
+        System.out.println("\n");
+
+        //returns the minimum cost as a double for the final triangle.
+        return ctable[0][n - 1];
+    }
+
+    /*
+    * this method will hopefully give back optimal triangles using preorder traversal ie using k as the parent
+    * then finding the children triangles from each sub-problem to get the optimal triangles.
+     */
+    public void drawTriangle(int[][] s, int i, int j, int n) {
+        if (i != j) {
+            System.out.println(i + " " + s[i][j] + " " + j);
+            drawTriangle(s, i, s[i][j], n);
+            drawTriangle(s, (s[i][j] + 1) % (n), j, n);
+        }
     }
 
 }

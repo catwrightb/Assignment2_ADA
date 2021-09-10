@@ -157,10 +157,12 @@ public class Shape extends JPanel {
                 polygon.addPoint(coordinate.x, coordinate.y);
             }
 
-            ArrayList<Triangle> tList = new ArrayList<>();
             ExactMethod exactMethod = new ExactMethod();
-            exactMethod.startExact(points, points.size());
-            tList = exactMethod.getcTable();
+
+            //this is the cost you asked for :) feel free to have a look at the recurssion thing haha
+            double exactCost = exactMethod.startExact(points, points.size());
+
+            System.out.println(exactCost);
 
             g2d.setColor(Color.RED);
             g2d.drawPolygon(polygon);
@@ -168,13 +170,13 @@ public class Shape extends JPanel {
             BruteForce bruteforce = new BruteForce(points);
             triangleslist = bruteforce.startInteriorLineSearch();
 
-            drawLines(g, triangleslist, tList);
+            drawLines(g, triangleslist);
 
 
         }
     }
 
-    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist, ArrayList<Triangle> tList) {
+    public static void drawLines(Graphics g, ArrayList<Triangle> triangleslist) {
 
         System.out.println("In shape : " + triangleslist);
         for (Triangle triangle : triangleslist) {
@@ -183,15 +185,6 @@ public class Shape extends JPanel {
             System.out.println(triangle.c.toString());
 
         }
-        for (Triangle t : tList) {
-            g.setColor(Color.GREEN);
-            g.drawLine(t.a.x, t.a.y, t.a.x2, t.a.y2);
-            g.drawLine(t.b.x, t.b.y, t.b.x2, t.b.y2);
-            g.drawLine(t.c.x, t.c.y, t.c.x2, t.c.y2);
-//            System.out.println(t.c.toString());
-
-        }
-
     }
 
 
