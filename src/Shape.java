@@ -213,8 +213,7 @@ public class Shape extends JPanel {
             String s3 = String.valueOf(roundOff);
             String newString3 = exactString.concat(s3);
             exactFinding.setText(newString3);
-            drawLines(g2d, triangleslist, Color.RED, 1);
-            //tList = exactMethod.getcTable();
+            drawLines(g2d, triangleslist, Color.MAGENTA, 1);
 
 
         }
@@ -238,11 +237,11 @@ public class Shape extends JPanel {
     }
 
 
-    public static void drawLines(Graphics2D g2d, ArrayList<CoordinateWithDistance> interiorEdges, Color Black, int five) {
+    public static void drawLines(Graphics2D g2d, ArrayList<CoordinateWithDistance> interiorEdges, Color Black, int size) {
 
         for (CoordinateWithDistance interiorEdge : interiorEdges) {
             g2d.setColor(Black);
-            g2d.setStroke(new BasicStroke(five));
+            g2d.setStroke(new BasicStroke(size));
             g2d.drawLine(interiorEdge.x, interiorEdge.y, interiorEdge.x2, interiorEdge.y2);
 
         }
